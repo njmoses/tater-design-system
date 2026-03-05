@@ -1,0 +1,31 @@
+---
+description: The brand collection contains raw hex codes and font variables.  Nothing in this collection implies intent, role, UI usage or component usage.
+
+globs: src/components/**/*.tsx
+
+alwaysApply: false
+---
+
+## Color Rules:
+
+All colors are stored as pure hex values. Colors have no semantic meaning. Colors are grouped by hue.
+
+---
+
+## Scale Structure:
+
+Scales use a 100-1200 scale. Lower number is lighter and higher numbers are darker. 
+Allowed Increments:
+100 by default
+50 when intermediate values are needed.
+25 when further refinement is also needed.
+
+---
+
+## Font Styles & Weights:
+Font styles and font weights are included as string variables.
+
+---
+
+## Other Instructions:
+White and black are in their own group called “Foundations”.

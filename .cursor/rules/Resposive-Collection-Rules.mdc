@@ -1,0 +1,33 @@
+---
+description: Contains all responsive variables that work across desktop, tablet, and mobile with an emphasis on type.
+
+globs: src/components/**/*.tsx
+
+alwaysApply: true
+---
+
+## Needs
+
+I need variables for text size, light height and paragraph spacing for the following:
+Headings:
+H1
+H2
+H3
+H4
+H5
+H6
+Copy:
+body-sm
+body-md
+body-lg
+caption
+
+---
+
+## Consistency Rules
+
+All fonts MUST use "Rubik" font
+
+## Accessibility
+
+Base paragraph (body-md) size needs to be 16px

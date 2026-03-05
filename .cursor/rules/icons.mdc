@@ -1,0 +1,25 @@
+---
+description: Icon usage rules for all components
+globs: src/**/*.tsx
+alwaysApply: flase
+---
+
+## Icon Library
+Always import icons from 'react-coolicons'. Never use @coolicons-dev/solid.
+
+## Icon Name Mapping (Figma → Code)
+| Figma Name | Component Name | Package          |
+|------------|----------------|------------------|
+| info       | Info           | react-coolicons  |
+
+## Correct Usage
+import { IconName } from '@coolicons-dev/solid';
+
+// Size using token scale values
+<IconName width={16} height={16} color={t.icon.default.subtle} />
+
+## Rules
+- Always pass color using icon tokens (t.icon.*.*)
+- Never hard-code color values on icons
+- Default icon size is 16x16 for inline, 20x20 for standalone
+

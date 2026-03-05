@@ -1,0 +1,48 @@
+---
+description: Mapped tokens are the only tokens that components may consume.
+
+globs: src/components/**/*.tsx
+
+alwaysApply: true
+---
+
+## Token Categories
+
+Surface
+Text
+Icon
+Border
+
+---
+
+## Semantics
+
+Primary
+Information
+Success
+Error
+Warning
+Disabled
+
+---
+
+## Light & Dark Modes
+
+Every mapped token defines
+Light value
+Dark value
+
+---
+
+## Accessibility
+
+Text and icons meets contrast requirements. 
+On-color tokens are meant for text and icons on colored surfaces.
+Disabled tokens reduce contrast but are still legible
+Focus icons reuse semantic colors.  
+
+---
+
+## Other Instructions
+
+I need text tokens are heading, body, caption, and placeholder which will also have “on-color” values associated with these. 

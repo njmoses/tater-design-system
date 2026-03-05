@@ -1,0 +1,42 @@
+---
+description: Alias tokens translate raw brand colors into semantic meaning. Alias is the only layer allowed to assign intent and group meaning. Alias tokens MUST always reference brand tokens.
+
+globs: src/components/**/*.tsx
+
+alwaysApply: true
+---
+
+## Color Rules
+
+Primary = Purple
+Information = Blue
+Success = Green
+Error = Red
+Warning = Orange
+Neutral = Grey
+Foundations = Black & White
+Not all scales must be aliased. 
+Optional scales = secondary & tertiary
+If brand scales exceed needs
+Pause
+Ask which scales should be aliased
+Do not assume
+
+---
+
+## Scale Structure
+
+Scales use a 100-1200 scale. Lower number is lighter and higher numbers are darker. 
+Allowed Increments:
+100 by default
+50 when intermediate values are needed.
+25 when further refinement is also needed.
+
+---
+
+## Other Instructions
+
+Alias modes exist only when other brands are present.
+Single brand design systems do not use multiple modes.
+Additional modes require confirmation.
+Font weights and styles can be pulled into the alias collection if multiple brands are required. 

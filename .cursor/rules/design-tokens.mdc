@@ -1,0 +1,212 @@
+---
+description: Enforces design token usage for all colors, typography, spacing, borders, and icons in React components. Apply when creating or editing any component file.
+globs: src/**/*.tsx, src/**/*.ts
+alwaysApply: false
+---
+
+# Design Token Rules
+
+## Token Import
+Always import tokens from the central tokens index. Never import from individual token files directly.
+
+```ts
+// CORRECT
+import { useTokens } from '@/tokens';
+import { typography } from '@/tokens';
+
+// WRONG
+import { brand } from '@/tokens/brand';
+import { alias } from '@/tokens/alias';
+```
+
+## Theme-Aware Components
+All components must accept a `theme` prop defaulting to `'light'` and use `useTokens()` to resolve mapped tokens.
+
+```tsx
+// CORRECT
+import { useTokens } from '@/tokens';
+import type { Theme } from '@/tokens';
+
+interface Props {
+  theme?: Theme;
+}
+
+const MyComponent = ({ theme = 'light' }: Props) => {
+  const t = useTokens(theme);
+  return <div style={{ backgroundColor: t.surface.primary.default }} />;
+};
+
+// WRONG
+const MyComponent = () => (
+  <div style={{ backgroundColor: '#4A4DE8' }} />
+);
+```
+
+## Colors
+Never use hard-coded hex values, rgb(), rgba(), or CSS color names. Always use mapped tokens.
+
+```tsx
+// CORRECT
+color: t.text.default.body
+backgroundColor: t.surface.primary.defaultSubtle
+borderColor: t.border.primary.default
+
+// WRONG
+color: '#181819'
+backgroundColor: '#EDEDFD'
+borderColor: 'purple'
+```
+
+### Color token namespaces
+- `t.surface.*` — background colors for containers, buttons, badges
+- `t.text.*` — text colors (heading, body, caption, placeholder, on-color)
+- `t.icon.*` — icon fill colors
+- `t.border.*` — border and outline colors
+- `t.base` / `t.default` — page-level background colors
+
+### Interaction states
+Always use the correct state variant — never manually lighten or darken colors.
+
+```tsx
+// CORRECT
+onMouseEnter={() => setColor(t.surface.primary.defaultHover)}
+
+// WRONG
+onMouseEnter={() => setColor('#3B3EBA')}
+```
+
+## Spacing
+Never use hard-coded pixel values for padding, margin, gap, or dimensions. Use `t.layoutSpacing.*` for component spacing.
+
+```tsx
+// CORRECT
+padding: `${t.layoutSpacing.md}px`     // 24px
+gap: `${t.layoutSpacing.sm}px`         // 16px
+margin: `${t.layoutSpacing.xsm}px`     // 8px
+
+// WRONG
+padding: '24px'
+gap: 16
+margin: '0.5rem'
+```
+
+### Layout spacing scale reference
+| Token         | Value |
+|---------------|-------|
+| none          | 0px   |
+| 2xsm          | 4px   |
+| xsm           | 8px   |
+| sm            | 16px  |
+| md            | 24px  |
+| lg            | 32px  |
+| xlg           | 40px  |
+| 2xlg          | 48px  |
+
+## Border Radius
+Always use `t.borderRadius.*` tokens. Never hard-code border radius values.
+
+```tsx
+// CORRECT
+borderRadius: `${t.borderRadius[200]}px`   // 8px  — inputs, cards
+borderRadius: `${t.borderRadius[400]}px`   // 16px — modals
+borderRadius: `${t.borderRadius.round}px`  // pill — badges, chips
+
+// WRONG
+borderRadius: '8px'
+borderRadius: 9999
+```
+
+## Border Width
+Always use `t.borderWidth.*` tokens.
+
+```tsx
+// CORRECT
+borderWidth: `${t.borderWidth.sm}px`   // 2px — default borders
+borderWidth: `${t.borderWidth.xs}px`   // 1px — subtle dividers
+
+// WRONG
+borderWidth: '1px'
+border: '2px solid purple'
+```
+
+## Typography
+Never hard-code font sizes, font weights, line heights, or font families.
+
+### For static text styles use the `typography` export:
+```tsx
+import { typography } from '@/tokens';
+
+// CORRECT
+style={{
+  fontSize: `${typography.body.md.fontSize}px`,
+  fontFamily: typography.body.md.fontFamily,
+  fontWeight: typography.body.md.fontWeight,
+  lineHeight: `${typography.body.md.lineHeight}px`,
+}}
+
+// WRONG
+style={{
+  fontSize: '16px',
+  fontFamily: 'Rubik, sans-serif',
+  fontWeight: 600,
+  lineHeight: '20px',
+}}
+```
+
+### Typography style reference
+**Body:** `typography.body.sm` | `body.md` | `body.lg`
+**Body variants:** append `Link` or `Semibold` (e.g. `typography.body.mdSemibold`)
+**Headings:** `typography.heading.h1` through `typography.heading.h6`
+**Labels:** `typography.label.primary` | `typography.label.secondary`
+
+### Font family
+Always use `'Rubik'` — never substitute with system fonts or other families.
+
+## Responsive Typography
+For components that need to respond to viewport size, use `responsive` tokens.
+
+```tsx
+import { responsive } from '@/tokens';
+
+// Desktop heading size
+fontSize: `${responsive.font.desktop.headings.h1.fontSize}px`
+
+// Mobile heading size  
+fontSize: `${responsive.font.mobile.headings.h1.fontSize}px`
+```
+
+## Disabled States
+Always use disabled-specific tokens — never use opacity to fake a disabled appearance.
+
+```tsx
+// CORRECT
+style={{
+  backgroundColor: t.surface.disabled.default,
+  color: t.text.disabled.default,
+  borderColor: t.border.disabled.default,
+  cursor: 'not-allowed',
+}}
+
+// WRONG
+style={{ opacity: 0.4 }}
+```
+
+## Token Layer Rules
+The token system has three layers. Components must only use the mapped layer.
+
+| Layer      | File         | Used by          |
+|------------|--------------|------------------|
+| brand.ts   | Raw values   | alias.ts only    |
+| alias.ts   | Semantic     | mapped.ts only   |
+| mapped.ts  | Use-case     | Components ✅     |
+
+Never reference `brand.*` or `alias.*` directly in component files.
+
+## New Component Checklist
+Before submitting any new component, verify:
+- [ ] Imports tokens from `@/tokens` only
+- [ ] Accepts `theme?: Theme` prop
+- [ ] Uses `useTokens(theme)` for all color, spacing, border values
+- [ ] Uses `typography.*` for all font properties
+- [ ] No hard-coded hex values, pixel values, or font strings anywhere
+- [ ] Hover/focus/disabled states use correct token variants
