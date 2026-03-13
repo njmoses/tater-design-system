@@ -1,7 +1,11 @@
-import { cloneElement, isValidElement, type ReactNode } from 'react';
-import { Info } from 'react-coolicons';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
+
+export type IconComponent = React.ComponentType<{
+  width?: number;
+  height?: number;
+  color?: string;
+}>;
 
 export type FieldStatus =
   | 'default'
@@ -20,14 +24,10 @@ export interface FieldProps {
   status?: FieldStatus;
   /** Whether the field has content (affects background) */
   filled?: boolean;
-  /** Whether to show the leading icon */
-  leadingIcon?: boolean;
-  /** Custom leading icon from react-coolicons (overrides default) */
-  leadingIconComponent?: ReactNode;
-  /** Whether to show the trailing icon */
-  trailingIcon?: boolean;
-  /** Custom trailing icon from react-coolicons (overrides default) */
-  trailingIconComponent?: ReactNode;
+  /** Optional icon component from react-coolicons to render at the start of the field */
+  leadingIcon?: IconComponent;
+  /** Optional icon component from react-coolicons to render at the end of the field */
+  trailingIcon?: IconComponent;
   /** Visual theme */
   theme?: Theme;
   /** Additional CSS class name */
@@ -35,14 +35,6 @@ export interface FieldProps {
 }
 
 const ICON_SIZE = 24;
-
-function DefaultLeadingIcon({ color }: { color: string }) {
-  return <Info width={ICON_SIZE} height={ICON_SIZE} color={color} />;
-}
-
-function DefaultTrailingIcon({ color }: { color: string }) {
-  return <Info width={ICON_SIZE} height={ICON_SIZE} color={color} />;
-}
 
 function getFieldStyles(
   t: ReturnType<typeof useTokens>,
@@ -100,10 +92,8 @@ export function Field({
   placeholder = 'Placeholder',
   status = 'default',
   filled,
-  leadingIcon = true,
-  leadingIconComponent,
-  trailingIcon = true,
-  trailingIconComponent,
+  leadingIcon,
+  trailingIcon,
   theme = 'light',
   className,
 }: FieldProps) {
@@ -112,27 +102,6 @@ export function Field({
   const displayText = isFilled ? text : placeholder;
   const styles = getFieldStyles(t, status, isFilled);
   const typo = typography.body.md;
-
-  const renderLeadingIcon = () => {
-    if (leadingIconComponent && isValidElement(leadingIconComponent)) {
-      return cloneElement(leadingIconComponent as React.ReactElement<{ color?: string; width?: number; height?: number }>, {
-        color: styles.iconColor,
-        width: ICON_SIZE,
-        height: ICON_SIZE,
-      });
-    }
-    return <DefaultLeadingIcon color={styles.iconColor} />;
-  };
-  const renderTrailingIcon = () => {
-    if (trailingIconComponent && isValidElement(trailingIconComponent)) {
-      return cloneElement(trailingIconComponent as React.ReactElement<{ color?: string; width?: number; height?: number }>, {
-        color: styles.iconColor,
-        width: ICON_SIZE,
-        height: ICON_SIZE,
-      });
-    }
-    return <DefaultTrailingIcon color={styles.iconColor} />;
-  };
 
   return (
     <div
@@ -166,11 +135,14 @@ export function Field({
         />
       )}
 
-      {leadingIcon && (
-        <span style={{ flexShrink: 0, display: 'flex' }}>
-          {renderLeadingIcon()}
-        </span>
-      )}
+      {leadingIcon && (() => {
+        const LeadingIcon = leadingIcon;
+        return (
+          <span style={{ flexShrink: 0, display: 'flex' }}>
+            <LeadingIcon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
+          </span>
+        );
+      })()}
 
       <span
         style={{
@@ -190,11 +162,14 @@ export function Field({
         {displayText}
       </span>
 
-      {trailingIcon && (
-        <span style={{ flexShrink: 0, display: 'flex' }}>
-          {renderTrailingIcon()}
-        </span>
-      )}
+      {trailingIcon && (() => {
+        const TrailingIcon = trailingIcon;
+        return (
+          <span style={{ flexShrink: 0, display: 'flex' }}>
+            <TrailingIcon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
+          </span>
+        );
+      })()}
     </div>
   );
 }

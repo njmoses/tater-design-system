@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Info } from 'react-coolicons';
+import { Info, Search, User, Mail, Lock, Eye, EyeOff, Check, Close } from 'react-coolicons';
 import { Field } from './Field';
 
 const meta: Meta<typeof Field> = {
@@ -14,10 +14,10 @@ const meta: Meta<typeof Field> = {
       control: 'boolean',
     },
     leadingIcon: {
-      control: 'boolean',
+      control: false,
     },
     trailingIcon: {
-      control: 'boolean',
+      control: false,
     },
     theme: {
       control: 'inline-radio',
@@ -35,8 +35,8 @@ export const Default: Story = {
     placeholder: 'Placeholder',
     status: 'default',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -47,8 +47,8 @@ export const DefaultFilled: Story = {
     placeholder: 'Placeholder',
     status: 'default',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -59,8 +59,8 @@ export const Hover: Story = {
     placeholder: 'Placeholder',
     status: 'hover',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -71,8 +71,8 @@ export const HoverFilled: Story = {
     placeholder: 'Placeholder',
     status: 'hover',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -83,8 +83,8 @@ export const Focus: Story = {
     placeholder: 'Placeholder',
     status: 'focus',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -95,8 +95,8 @@ export const FocusFilled: Story = {
     placeholder: 'Placeholder',
     status: 'focus',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -107,8 +107,8 @@ export const Error: Story = {
     placeholder: 'Placeholder',
     status: 'error',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Mail,
+    trailingIcon: Close,
     theme: 'light',
   },
 };
@@ -119,8 +119,8 @@ export const ErrorFilled: Story = {
     placeholder: 'Placeholder',
     status: 'error',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Mail,
+    trailingIcon: Close,
     theme: 'light',
   },
 };
@@ -131,8 +131,8 @@ export const Success: Story = {
     placeholder: 'Placeholder',
     status: 'success',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Mail,
+    trailingIcon: Check,
     theme: 'light',
   },
 };
@@ -143,8 +143,8 @@ export const SuccessFilled: Story = {
     placeholder: 'Placeholder',
     status: 'success',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Mail,
+    trailingIcon: Check,
     theme: 'light',
   },
 };
@@ -155,8 +155,8 @@ export const Disabled: Story = {
     placeholder: 'Placeholder',
     status: 'disabled',
     filled: false,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: User,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
@@ -167,32 +167,30 @@ export const DisabledFilled: Story = {
     placeholder: 'Placeholder',
     status: 'disabled',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: User,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
 
-export const NoLeadingIcon: Story = {
+export const LeadingIconOnly: Story = {
   args: {
-    text: 'No leading icon',
+    text: 'Leading icon only',
     placeholder: 'Placeholder',
     status: 'default',
     filled: true,
-    leadingIcon: false,
-    trailingIcon: true,
+    leadingIcon: Search,
     theme: 'light',
   },
 };
 
-export const NoTrailingIcon: Story = {
+export const TrailingIconOnly: Story = {
   args: {
-    text: 'No trailing icon',
+    text: 'Trailing icon only',
     placeholder: 'Placeholder',
     status: 'default',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: false,
+    trailingIcon: Eye,
     theme: 'light',
   },
 };
@@ -203,22 +201,18 @@ export const NoIcons: Story = {
     placeholder: 'Placeholder',
     status: 'default',
     filled: true,
-    leadingIcon: false,
-    trailingIcon: false,
     theme: 'light',
   },
 };
 
-export const CustomIcons: Story = {
+export const PasswordField: Story = {
   args: {
-    text: 'Custom icons',
-    placeholder: 'Placeholder',
+    text: 'password123',
+    placeholder: 'Enter password',
     status: 'default',
     filled: true,
-    leadingIcon: true,
-    trailingIcon: true,
-    leadingIconComponent: <Info />,
-    trailingIconComponent: <Info />,
+    leadingIcon: Lock,
+    trailingIcon: EyeOff,
     theme: 'light',
   },
 };
@@ -282,8 +276,8 @@ export const AllStatuses: Story = {
   ),
   args: {
     placeholder: 'Placeholder',
-    leadingIcon: true,
-    trailingIcon: true,
+    leadingIcon: Search,
+    trailingIcon: Info,
     theme: 'light',
   },
 };
