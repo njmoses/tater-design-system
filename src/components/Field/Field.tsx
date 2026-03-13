@@ -127,7 +127,7 @@ export function Field({
         <div
           style={{
             position: 'absolute',
-            inset: -3,
+            inset: -(3 + t.borderWidth.sm),
             border: `${t.borderWidth.sm}px solid ${t.border.primary.focus}`,
             borderRadius: t.borderRadius[300],
             pointerEvents: 'none',
