@@ -10,7 +10,9 @@ Always import icons from 'react-coolicons'. Never use @coolicons-dev/solid.
 ## Icon Name Mapping (Figma → Code)
 | Figma Name | Component Name | Package          |
 |------------|----------------|------------------|
-| info       | Info           | react-coolicons  |
+| Info       | Info           | react-coolicons  |
+| Show       | Show           | react-coolicons  |
+
 
 ## Correct Usage
 import { IconName } from '@coolicons-dev/solid';
@@ -22,4 +24,8 @@ import { IconName } from '@coolicons-dev/solid';
 - Always pass color using icon tokens (t.icon.*.*)
 - Never hard-code color values on icons
 - Default icon size is 16x16 for inline, 20x20 for standalone
+- leadingIcon?: React.ComponentType<{ width?: number; height?: number; color?: string }> 
+  — optional icon component from react-coolicons to render at the start of the field
+- trailingIcon?: React.ComponentType<{ width?: number; height?: number; color?: string }> 
+  — optional icon component from react-coolicons to render at the end of the field
 
