@@ -44,15 +44,13 @@ type Story = StoryObj<StoryArgs>;
 const renderItem = (args: StoryArgs) => {
   const { showLeadingIcon, showTrailingIcon, ...itemProps } = args;
   return (
-    <div style={{ width: 250 }}>
-      <MenuItem
-        {...itemProps}
-        showLeadingIcon={showLeadingIcon}
-        showTrailingIcon={showTrailingIcon}
-        leadingIcon={showLeadingIcon ? User01 : undefined}
-        trailingIcon={showTrailingIcon ? Lock : undefined}
-      />
-    </div>
+    <MenuItem
+      {...itemProps}
+      showLeadingIcon={showLeadingIcon}
+      showTrailingIcon={showTrailingIcon}
+      leadingIcon={showLeadingIcon ? User01 : undefined}
+      trailingIcon={showTrailingIcon ? Lock : undefined}
+    />
   );
 };
 
@@ -193,18 +191,16 @@ export const AllVariants: Story = {
               {states.map((state) => (
                 <div key={state} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                   <span style={{ fontSize: 11, color: '#999', textTransform: 'capitalize' }}>{state}</span>
-                  <div style={{ width: 250 }}>
-                    <MenuItem
-                      state={state}
-                      selected={selected}
-                      label="Menu item"
-                      showLeadingIcon={showLeadingIcon}
-                      showTrailingIcon={showTrailingIcon}
-                      leadingIcon={showLeadingIcon ? User01 : undefined}
-                      trailingIcon={showTrailingIcon ? Lock : undefined}
-                      theme={args.theme}
-                    />
-                  </div>
+                  <MenuItem
+                    state={state}
+                    selected={selected}
+                    label="Menu item"
+                    showLeadingIcon={showLeadingIcon}
+                    showTrailingIcon={showTrailingIcon}
+                    leadingIcon={showLeadingIcon ? User01 : undefined}
+                    trailingIcon={showTrailingIcon ? Lock : undefined}
+                    theme={args.theme}
+                  />
                 </div>
               ))}
             </div>

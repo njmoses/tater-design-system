@@ -111,6 +111,7 @@ export function MenuItem({
         borderBottom: styles.borderBottom,
         boxSizing: 'border-box',
         cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+        minWidth: 250,
         width: '100%',
       }}
     >
