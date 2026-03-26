@@ -13,7 +13,10 @@
       "Bash(node -e \"const icons = require\\('react-coolicons'\\); console.log\\(Object.keys\\(icons\\).filter\\(k => k.toLowerCase\\(\\).includes\\('heart'\\)\\).join\\(', '\\)\\)\")",
       "Bash(find /Users/nathanmoses/Projects/Portsmith/figma_to_code/portsmith-design-library/node_modules/react-coolicons -name \"*.d.ts\" | head -5 && grep -r \"Heart\" /Users/nathanmoses/Projects/Portsmith/figma_to_code/portsmith-design-library/node_modules/react-coolicons/dist --include=\"*.d.ts\" -l 2>/dev/null | head -3)",
       "Bash(node:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "mcp__figma__get_metadata",
+      "mcp__figma__get_variable_defs",
+      "Bash(grep -i \"check\\\\|minus\" /Users/nathanmoses/Projects/Portsmith/figma_to_code/portsmith-design-library/node_modules/react-coolicons/dist/types/*.d.ts)"
     ]
   }
 }
