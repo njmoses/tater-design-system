@@ -12,6 +12,7 @@ export type ButtonGroupStatus = 'default' | 'hover' | 'focus' | 'disabled';
 
 export interface ButtonGroupProps {
   status?: ButtonGroupStatus;
+  showLabel?: boolean;
   label?: string;
   showLeadingIcon?: boolean;
   leadingIcon?: IconComponent;
@@ -69,6 +70,7 @@ function getContainerBorderColor(
 interface ButtonGroupItemProps {
   t: ReturnType<typeof useTokens>;
   styles: ReturnType<typeof getItemStyles>;
+  showLabel: boolean;
   label: string;
   showLeadingIcon: boolean;
   leadingIcon?: IconComponent;
@@ -77,6 +79,7 @@ interface ButtonGroupItemProps {
 function ButtonGroupItem({
   t,
   styles,
+  showLabel,
   label,
   showLeadingIcon,
   leadingIcon,
@@ -108,26 +111,29 @@ function ButtonGroupItem({
           <LeadingIcon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
         </span>
       )}
-      <span
-        style={{
-          fontFamily: typo.fontFamily,
-          fontSize: `${typo.fontSize}px`,
-          fontWeight: typo.fontWeight,
-          lineHeight: `${typo.lineHeight}px`,
-          letterSpacing: typo.letterSpacing,
-          color: styles.textColor,
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}
-      >
-        {label}
-      </span>
+      {showLabel && (
+        <span
+          style={{
+            fontFamily: typo.fontFamily,
+            fontSize: `${typo.fontSize}px`,
+            fontWeight: typo.fontWeight,
+            lineHeight: `${typo.lineHeight}px`,
+            letterSpacing: typo.letterSpacing,
+            color: styles.textColor,
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+          }}
+        >
+          {label}
+        </span>
+      )}
     </div>
   );
 }
 
 export function ButtonGroup({
   status = 'default',
+  showLabel = true,
   label = 'Button Group',
   showLeadingIcon = true,
   leadingIcon,
@@ -153,6 +159,7 @@ export function ButtonGroup({
           key={i}
           t={t}
           styles={styles}
+          showLabel={showLabel}
           label={label}
           showLeadingIcon={showLeadingIcon}
           leadingIcon={leadingIcon}

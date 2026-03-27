@@ -11,6 +11,7 @@ const meta: Meta<ButtonGroupProps> = {
       control: 'inline-radio',
       options: ['default', 'hover', 'focus', 'disabled'],
     },
+    showLabel: { control: 'boolean' },
     showLeadingIcon: { control: 'boolean' },
     leadingIcon: { table: { disable: true } },
     theme: {
@@ -34,6 +35,7 @@ export const Default: Story = {
   render: renderButtonGroup,
   args: {
     status: 'default',
+    showLabel: true,
     label: 'Button Group',
     showLeadingIcon: true,
     theme: 'light',
@@ -44,6 +46,7 @@ export const Hover: Story = {
   render: renderButtonGroup,
   args: {
     status: 'hover',
+    showLabel: true,
     label: 'Button Group',
     showLeadingIcon: true,
     theme: 'light',
@@ -54,6 +57,7 @@ export const Focus: Story = {
   render: renderButtonGroup,
   args: {
     status: 'focus',
+    showLabel: true,
     label: 'Button Group',
     showLeadingIcon: true,
     theme: 'light',
@@ -64,6 +68,7 @@ export const Disabled: Story = {
   render: renderButtonGroup,
   args: {
     status: 'disabled',
+    showLabel: true,
     label: 'Button Group',
     showLeadingIcon: true,
     theme: 'light',
