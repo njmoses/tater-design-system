@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Heart } from 'react-coolicons';
+import { Show } from 'react-coolicons';
 import { Tab } from './Tab';
 import type { TabProps } from './Tab';
 
@@ -28,8 +28,8 @@ type Story = StoryObj<TabProps>;
 const renderTab = (args: TabProps) => (
   <Tab
     {...args}
-    leadingIcon={args.showLeadingIcon ? Heart : undefined}
-    trailingIcon={args.showTrailingIcon ? Heart : undefined}
+    leadingIcon={args.showLeadingIcon ? Show : undefined}
+    trailingIcon={args.showTrailingIcon ? Show : undefined}
   />
 );
 
@@ -101,8 +101,8 @@ export const TabBar: Story = {
               label={tab.label}
               showLeadingIcon={args.showLeadingIcon}
               showTrailingIcon={args.showTrailingIcon}
-              leadingIcon={args.showLeadingIcon ? Heart : undefined}
-              trailingIcon={args.showTrailingIcon ? Heart : undefined}
+              leadingIcon={args.showLeadingIcon ? Show : undefined}
+              trailingIcon={args.showTrailingIcon ? Show : undefined}
               theme={args.theme}
             />
           ))}
