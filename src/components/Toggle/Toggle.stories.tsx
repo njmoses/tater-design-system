@@ -22,7 +22,7 @@ type Story = StoryObj<ToggleProps>;
 
 export const Default: Story = {
   args: {
-    status: 'default',
+    status: "focus",
     active: false,
     label: 'Toggle Label',
     theme: 'light',

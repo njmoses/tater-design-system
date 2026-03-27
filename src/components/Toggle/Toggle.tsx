@@ -1,11 +1,6 @@
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
-const KNOB_DEFAULT      = 'http://localhost:3845/assets/738179f8a43555b344b8a4d90de6461ba0b78468.svg';
-const KNOB_HOVER_INACTIVE = 'http://localhost:3845/assets/2509ad43d1ca318bbfde5744417a538d7be733d5.svg';
-const KNOB_DISABLED     = 'http://localhost:3845/assets/0ed9cab522bc8da4f0a815d3691dbe7a1a0404f9.svg';
-const KNOB_ACTIVE       = 'http://localhost:3845/assets/3e87178dcba89d7765b93399b5b3c3d96a49c48e.svg';
-
 export type ToggleStatus = 'default' | 'hover' | 'focus' | 'disabled';
 
 export interface ToggleProps {
@@ -18,7 +13,8 @@ export interface ToggleProps {
 const TRACK_WIDTH   = 48;
 const TRACK_HEIGHT  = 24;
 const KNOB_SIZE     = 20;
-const TRACK_PADDING = 2; // scale/50 = 2px
+const TRACK_PADDING = 2;  // scale/50 = 2px
+const FOCUS_GAP     = 2;  // px of visual space between track border and focus ring border
 
 function getTrackStyles(
   t: ReturnType<typeof useTokens>,
@@ -43,11 +39,15 @@ function getTrackStyles(
   };
 }
 
-function getKnobSrc(status: ToggleStatus, active: boolean): string {
-  if (status === 'disabled') return KNOB_DISABLED;
-  if (active) return KNOB_ACTIVE;
-  if (status === 'hover') return KNOB_HOVER_INACTIVE;
-  return KNOB_DEFAULT;
+function getKnobColor(
+  t: ReturnType<typeof useTokens>,
+  status: ToggleStatus,
+  active: boolean
+): string {
+  if (status === 'disabled') return t.icon.disabled.default;
+  if (active) return t.base;
+  if (status === 'hover') return t.surface.primary.defaultHover;
+  return t.surface.primary.default;
 }
 
 export function Toggle({
@@ -58,8 +58,14 @@ export function Toggle({
 }: ToggleProps) {
   const t = useTokens(theme);
   const trackStyles = getTrackStyles(t, status, active);
-  const typo = typography.body.md;
+  const knobColor   = getKnobColor(t, status, active);
+  const typo        = typography.body.md;
   const showFocusRing = status === 'focus';
+
+  // Focus ring offset: FOCUS_GAP + track border width, so the visual gap is exactly FOCUS_GAP px
+  const focusOffset = -(FOCUS_GAP + t.borderWidth.sm);
+  const focusWidth  = TRACK_WIDTH  + 2 * (FOCUS_GAP + t.borderWidth.xs);
+  const focusHeight = TRACK_HEIGHT + 2 * (FOCUS_GAP + t.borderWidth.xs);
 
   return (
     <div
@@ -91,10 +97,10 @@ export function Toggle({
           <div
             style={{
               position: 'absolute',
-              width: 54,
-              height: 30,
-              left: -3,
-              top: -3,
+              width: focusWidth,
+              height: focusHeight,
+              left: focusOffset,
+              top: focusOffset,
               border: `${t.borderWidth.xs}px solid ${t.border.primary.default}`,
               borderRadius: `${t.borderRadius.round}px`,
               pointerEvents: 'none',
@@ -105,23 +111,13 @@ export function Toggle({
         {/* Knob */}
         <div
           style={{
-            position: 'relative',
             flexShrink: 0,
             width: KNOB_SIZE,
             height: KNOB_SIZE,
+            borderRadius: '50%',
+            backgroundColor: knobColor,
           }}
-        >
-          <img
-            alt=""
-            src={getKnobSrc(status, active)}
-            style={{
-              position: 'absolute',
-              display: 'block',
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </div>
+        />
       </div>
 
       {/* Label */}
