@@ -28,7 +28,7 @@ export default meta;
 type ItemStory = StoryObj<PaginationItemProps>;
 
 export const Default: ItemStory = {
-  args: { status: 'default', type: 'numeric', number: 1, theme: 'light' },
+  args: { status: 'default', type: "selected", number: 1, theme: 'light' },
 };
 
 export const Hover: ItemStory = {
