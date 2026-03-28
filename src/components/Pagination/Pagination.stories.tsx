@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Pagination, PaginationItem } from './Pagination';
-import type { PaginationProps, PaginationItemProps } from './Pagination';
-
-// ─── PaginationItem ───────────────────────────────────────────────────────────
+import { PaginationItem } from './Pagination';
+import type { PaginationItemProps } from './Pagination';
 
 const meta: Meta<PaginationItemProps> = {
   title: 'Components/Pagination/PaginationItem',
@@ -28,7 +26,7 @@ export default meta;
 type ItemStory = StoryObj<PaginationItemProps>;
 
 export const Default: ItemStory = {
-  args: { status: 'default', type: "selected", number: 1, theme: 'light' },
+  args: { status: 'default', type: 'selected', number: 1, theme: 'light' },
 };
 
 export const Hover: ItemStory = {
@@ -91,18 +89,4 @@ export const AllTypes: ItemStory = {
       <PaginationItem type="next" />
     </div>
   ),
-};
-
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
-export const FormatJumper: StoryObj<PaginationProps> = {
-  render: (args) => <Pagination {...args} />,
-  name: 'Format: Jumper',
-  args: { format: 'jumper', theme: 'light' },
-};
-
-export const FormatDefault: StoryObj<PaginationProps> = {
-  render: (args) => <Pagination {...args} />,
-  name: 'Format: Default',
-  args: { format: 'default', theme: 'light' },
 };
