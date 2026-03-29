@@ -16,6 +16,8 @@ export interface LinkProps {
   label: string;
   showLeadingIcon: boolean;
   leadingIcon?: IconComponent;
+  showTrailingIcon: boolean;
+  trailingIcon?: IconComponent;
   theme?: Theme;
 }
 
@@ -53,6 +55,8 @@ export function Link({
   label,
   showLeadingIcon,
   leadingIcon,
+  showTrailingIcon,
+  trailingIcon,
   theme = 'light',
 }: LinkProps) {
   const t = useTokens(theme);
@@ -60,6 +64,7 @@ export function Link({
   const typo = type === 'inline' ? typography.body.mdLink : typography.body.md;
 
   const LeadingIcon = leadingIcon;
+  const TrailingIcon = trailingIcon;
 
   return (
     <div
@@ -110,6 +115,12 @@ export function Link({
       >
         {label}
       </span>
+
+      {showTrailingIcon && TrailingIcon && (
+        <span style={{ flexShrink: 0, display: 'flex' }}>
+          <TrailingIcon width={ICON_SIZE} height={ICON_SIZE} color={iconColor} />
+        </span>
+      )}
     </div>
   );
 }

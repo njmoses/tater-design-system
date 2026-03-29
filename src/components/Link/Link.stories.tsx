@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Info } from 'react-coolicons';
+import { ExternalLink, ArrowRightMd } from 'react-coolicons';
 import { Link } from './Link';
 import type { LinkProps } from './Link';
 
-type StoryArgs = LinkProps & { showLeadingIconToggle?: boolean };
-
-const meta: Meta<StoryArgs> = {
+const meta: Meta<LinkProps> = {
   title: 'Components/Link',
   component: Link,
   argTypes: {
@@ -26,6 +24,12 @@ const meta: Meta<StoryArgs> = {
     leadingIcon: {
       table: { disable: true },
     },
+    showTrailingIcon: {
+      control: 'boolean',
+    },
+    trailingIcon: {
+      table: { disable: true },
+    },
     theme: {
       control: 'inline-radio',
       options: ['light', 'dark'],
@@ -34,12 +38,13 @@ const meta: Meta<StoryArgs> = {
 };
 
 export default meta;
-type Story = StoryObj<StoryArgs>;
+type Story = StoryObj<LinkProps>;
 
-const render = (args: StoryArgs) => (
+const render = (args: LinkProps) => (
   <Link
     {...args}
-    leadingIcon={args.showLeadingIcon ? Info : undefined}
+    leadingIcon={args.showLeadingIcon ? ExternalLink : undefined}
+    trailingIcon={args.showTrailingIcon ? ArrowRightMd : undefined}
   />
 );
 
@@ -50,6 +55,7 @@ export const Default: Story = {
     type: 'basic',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -61,6 +67,7 @@ export const Hover: Story = {
     type: 'basic',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -72,6 +79,7 @@ export const Focus: Story = {
     type: 'basic',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -83,6 +91,7 @@ export const Disabled: Story = {
     type: 'basic',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -94,6 +103,7 @@ export const InlineDefault: Story = {
     type: 'inline',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -105,6 +115,7 @@ export const InlineHover: Story = {
     type: 'inline',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -116,6 +127,7 @@ export const InlineFocus: Story = {
     type: 'inline',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -127,6 +139,7 @@ export const InlineDisabled: Story = {
     type: 'inline',
     label: 'Link',
     showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
@@ -148,7 +161,9 @@ export const AllVariants: Story = {
                   type={type}
                   label="Link"
                   showLeadingIcon={true}
-                  leadingIcon={Info}
+                  leadingIcon={ExternalLink}
+                  showTrailingIcon={true}
+                  trailingIcon={ArrowRightMd}
                 />
               </div>
             ))}
