@@ -8,7 +8,8 @@ import { ChevronRight } from 'react-coolicons';
 export interface BreadcrumbItem {
   label: string;
   status?: LinkStatus;
-  showLeadingIcon?: boolean;
+  showLeadingIcon
+  ?: boolean;
   leadingIcon?: IconComponent;
 }
 
