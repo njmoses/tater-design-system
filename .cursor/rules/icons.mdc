@@ -12,6 +12,8 @@ Always import icons from 'react-coolicons'. Never use @coolicons-dev/solid.
 |------------|----------------|------------------|
 | Info       | Info           | react-coolicons  |
 | Show       | Show           | react-coolicons  |
+| Add_Plus   | AddPlus        | react-coolicons  |
+| Close_SM   | CloseSM        | react-coolicons  |
 
 
 ## Correct Usage
