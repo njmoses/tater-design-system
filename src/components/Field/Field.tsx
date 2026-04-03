@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
@@ -11,6 +12,7 @@ export type FieldStatus =
   | 'default'
   | 'hover'
   | 'focus'
+  | 'active'
   | 'error'
   | 'success'
   | 'disabled';
@@ -18,9 +20,11 @@ export type FieldStatus =
 export interface FieldProps {
   /** The input value or placeholder when empty */
   text?: string;
-  /** Placeholder text when field is empty */
+  /** Placeholder text for the input */
   placeholder?: string;
-  /** Status variant controlling border, background, and icon colors */
+  /** Status variant controlling border, background, and icon colors.
+   *  Use 'error', 'success', or 'disabled' to set a controlled state.
+   *  'hover' and 'focus' are also accepted for static story display. */
   status?: FieldStatus;
   /** Whether the field has content (affects background) */
   filled?: boolean;
@@ -32,6 +36,14 @@ export interface FieldProps {
   theme?: Theme;
   /** Additional CSS class name */
   className?: string;
+  /** Controlled input value */
+  value?: string;
+  /** Callback on input change */
+  onChange?: (value: string) => void;
+  /** Callback when field is focused */
+  onFocus?: () => void;
+  /** Callback when field loses focus */
+  onBlur?: () => void;
 }
 
 const ICON_SIZE = 24;
@@ -70,6 +82,7 @@ function getFieldStyles(
         textColor: t.text.default.body,
         iconColor: t.icon.primary.defaultHover,
       };
+    case 'active':
     case 'focus':
       return {
         backgroundColor: t.base,
@@ -87,6 +100,12 @@ function getFieldStyles(
   }
 }
 
+// Stable class per theme so we can target ::placeholder without CSS modules
+const PLACEHOLDER_CLASS = {
+  light: 'tater-field-placeholder-light',
+  dark: 'tater-field-placeholder-dark',
+} as const;
+
 export function Field({
   text = '',
   placeholder = 'Placeholder',
@@ -96,12 +115,49 @@ export function Field({
   trailingIcon,
   theme = 'light',
   className,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
 }: FieldProps) {
   const t = useTokens(theme);
-  const isFilled = filled ?? text.length > 0;
-  const displayText = isFilled ? text : placeholder;
-  const styles = getFieldStyles(t, status, isFilled);
+  const [interactionStatus, setInteractionStatus] = useState<FieldStatus>(status);
+
+  const isDisabled = status === 'disabled';
+  const currentValue = value ?? text;
+  const isFilled = filled ?? currentValue.length > 0;
+  const styles = getFieldStyles(t, interactionStatus, isFilled);
   const typo = typography.body.md;
+
+  const showFocusRing =
+    interactionStatus === 'active' || interactionStatus === 'focus';
+
+  const placeholderClass = PLACEHOLDER_CLASS[theme] ?? PLACEHOLDER_CLASS.light;
+
+  const handleMouseEnter = () => {
+    if (!isDisabled) setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    setInteractionStatus(status);
+  };
+
+  const handleFocus = () => {
+    setInteractionStatus('active');
+    onFocus?.();
+  };
+
+  const handleBlur = () => {
+    setInteractionStatus(status);
+    onBlur?.();
+  };
+
+  // Controlled vs uncontrolled: if `value` is provided, bind it; otherwise let
+  // the input be uncontrolled with `defaultValue` from the `text` prop.
+  const inputValueProps =
+    value !== undefined
+      ? { value, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value) }
+      : { defaultValue: text };
 
   return (
     <div
@@ -122,8 +178,13 @@ export function Field({
         borderRadius: t.borderRadius[200],
         boxSizing: 'border-box',
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {status === 'focus' && (
+      {/* Inject placeholder colour via a <style> tag — inline styles can't target ::placeholder */}
+      <style>{`.${placeholderClass}::placeholder { color: ${t.text.default.placeholder}; }`}</style>
+
+      {showFocusRing && (
         <div
           style={{
             position: 'absolute',
@@ -144,23 +205,30 @@ export function Field({
         );
       })()}
 
-      <span
+      <input
+        className={placeholderClass}
+        placeholder={placeholder}
+        disabled={isDisabled}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        {...inputValueProps}
         style={{
           flex: '1 0 0',
           minWidth: 0,
           fontFamily: typo.fontFamily,
           fontSize: typo.fontSize,
           fontWeight: typo.fontWeight,
-          lineHeight: typo.lineHeight,
+          lineHeight: `${typo.lineHeight}px`,
           letterSpacing: typo.letterSpacing,
-          color: styles.textColor,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
+          color: t.text.default.body,
+          background: 'transparent',
+          border: 'none',
+          outline: 'none',
+          padding: 0,
+          width: '100%',
+          cursor: isDisabled ? 'not-allowed' : 'text',
         }}
-      >
-        {displayText}
-      </span>
+      />
 
       {trailingIcon && (() => {
         const TrailingIcon = trailingIcon;

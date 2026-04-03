@@ -247,6 +247,15 @@ export const NoIcons: Story = {
   },
 };
 
+export const Interactive: Story = {
+  render: renderField,
+  args: {
+    placeholder: 'Type something...',
+    status: 'default',
+    theme: 'light',
+  },
+};
+
 export const AllStatuses: Story = {
   render: (args) => {
     const { showLeadingIcon, showTrailingIcon, ...fieldProps } = args;

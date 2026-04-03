@@ -172,3 +172,39 @@ export const FilledFalse: Story = {
     theme: 'light',
   },
 };
+
+export const Interactive: Story = {
+  render: renderInput,
+  args: {
+    label: 'Label',
+    hint: 'Hint Text',
+    placeholder: 'Type something...',
+    status: 'default',
+    theme: 'light',
+  },
+};
+
+export const AllStatusVariants: Story = {
+  render: (args) => {
+    const statuses = ['default', 'error', 'success', 'disabled'] as const;
+    return (
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-start' }}>
+        {statuses.map((s) => (
+          <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 12, color: '#666', textTransform: 'capitalize' }}>{s}</span>
+            <Input
+              label="Label"
+              hint="Hint Text"
+              placeholder="Type something..."
+              status={s}
+              theme={args.theme}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  },
+  args: {
+    theme: 'light',
+  },
+};

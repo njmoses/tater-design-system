@@ -38,6 +38,10 @@ export function Input({
   leadingIcon,
   trailingIcon,
   className,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
   // Shared
   theme = 'light',
 }: InputProps) {
@@ -86,6 +90,10 @@ export function Input({
         leadingIcon={leadingIcon}
         trailingIcon={trailingIcon}
         className={className}
+        value={value}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
         theme={theme}
       />
     </div>
