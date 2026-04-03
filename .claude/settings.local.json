@@ -22,7 +22,9 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\(''''mcpServers'''', {}\\), indent=2\\)\\)\")",
       "Bash(curl -s --max-time 3 http://127.0.0.1:3845/sse)",
       "Bash(curl -v --max-time 3 http://127.0.0.1:3845/sse)",
-      "mcp__figma__get_figjam"
+      "mcp__figma__get_figjam",
+      "Bash(mkdir -p /Users/nathanmoses/Projects/Portsmith/figma_to_code/tater-design-library/src/components/Carousel/CarouselArrow)",
+      "Bash(mkdir -p /Users/nathanmoses/Projects/Portsmith/figma_to_code/tater-design-library/src/components/Carousel/CarouselIndicator)"
     ]
   }
 }
