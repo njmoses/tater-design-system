@@ -1,0 +1,45 @@
+---
+description: Interaction state rules for hover and active states in all components
+globs: src/components/**/*.tsx
+alwaysApply: false
+---
+
+## Interaction State Pattern
+All interactive components must manage hover and active states 
+internally using useState and mouse/focus event handlers.
+
+## Standard Implementation
+```tsx
+const [interactionStatus, setInteractionStatus] = useState(status);
+
+// Always respect disabled — never apply hover or active to disabled
+const handleMouseEnter = () => {
+  if (status === 'disabled') return;
+  setInteractionStatus('hover');
+};
+
+const handleMouseLeave = () => {
+  if (status === 'disabled') return;
+  setInteractionStatus(status);
+};
+
+const handleMouseDown = () => {
+  if (status === 'disabled') return;
+  setInteractionStatus('active');
+};
+
+const handleMouseUp = () => {
+  if (status === 'disabled') return;
+  setInteractionStatus(status);
+};
+```
+
+## Rules
+- Never apply hover or active states when status is 'disabled'
+- interactionStatus drives visual rendering
+- External status prop drives error, success, disabled states
+- onMouseEnter → hover
+- onMouseLeave → reset to status prop
+- onMouseDown → active
+- onMouseUp → reset to status prop
+- Always attach handlers to the outermost interactive element
