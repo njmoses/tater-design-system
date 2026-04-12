@@ -57,7 +57,7 @@ export const Default: Story = {
   args: {
     text: '',
     placeholder: 'Placeholder',
-    status: 'default',
+    status: "default",
     filled: false,
     showLeadingIcon: true,
     showTrailingIcon: true,

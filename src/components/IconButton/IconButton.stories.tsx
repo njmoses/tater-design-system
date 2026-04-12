@@ -13,7 +13,7 @@ const meta: Meta<IconButtonProps> = {
     },
     state: {
       control: 'inline-radio',
-      options: ['default', 'hover', 'focused', 'disabled'],
+      options: ['default', 'hover', 'focus', 'disabled'],
     },
     theme: {
       control: 'inline-radio',
@@ -22,6 +22,7 @@ const meta: Meta<IconButtonProps> = {
     Icon: {
       table: { disable: true },
     },
+    onClick: { action: 'clicked' },
   },
 };
 
@@ -49,7 +50,7 @@ export const Hover: Story = {
 export const Focus: Story = {
   args: {
     type: 'primary',
-    state: 'focused',
+    state: 'focus',
     Icon: Heart01,
     theme: 'light',
   },
@@ -66,7 +67,7 @@ export const Disabled: Story = {
 
 export const AllVariants: Story = {
   render: (args) => {
-    const states = ['default', 'hover', 'focused', 'disabled'] as const;
+    const states = ['default', 'hover', 'focus', 'disabled'] as const;
     const types = ['primary', 'secondary', 'tertiary'] as const;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
@@ -91,6 +92,33 @@ export const AllVariants: Story = {
     );
   },
   args: {
+    theme: 'light',
+  },
+};
+
+export const InteractivePrimary: Story = {
+  args: {
+    type: 'primary',
+    state: 'default',
+    Icon: Heart01,
+    theme: 'light',
+  },
+};
+
+export const InteractiveSecondary: Story = {
+  args: {
+    type: 'secondary',
+    state: 'default',
+    Icon: Heart01,
+    theme: 'light',
+  },
+};
+
+export const InteractiveTertiary: Story = {
+  args: {
+    type: 'tertiary',
+    state: 'default',
+    Icon: Heart01,
     theme: 'light',
   },
 };

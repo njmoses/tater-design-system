@@ -18,7 +18,7 @@ const meta: Meta<StoryArgs> = {
     },
     state: {
       control: 'inline-radio',
-      options: ['default', 'hover', 'focused', 'disabled'],
+      options: ['default', 'hover', 'focus', 'disabled'],
     },
     showLeadingIcon: {
       control: 'boolean',
@@ -36,6 +36,7 @@ const meta: Meta<StoryArgs> = {
       control: 'inline-radio',
       options: ['light', 'dark'],
     },
+    onClick: { action: 'clicked' },
   },
 };
 
@@ -59,10 +60,10 @@ export const Default: Story = {
   render: renderButton,
   args: {
     type: 'primary',
-    state: 'default',
+    state: "default",
     label: 'Button',
-    showLeadingIcon: false,
-    showTrailingIcon: true,
+    showLeadingIcon: true,
+    showTrailingIcon: false,
     theme: 'light',
   },
 };
@@ -83,7 +84,7 @@ export const Focus: Story = {
   render: renderButton,
   args: {
     type: 'primary',
-    state: 'focused',
+    state: 'focus',
     label: 'Button',
     showLeadingIcon: true,
     showTrailingIcon: true,
@@ -136,7 +137,7 @@ export const AllVariants: Story = {
       leadingIcon: showLeadingIcon ? Show : undefined,
       trailingIcon: showTrailingIcon ? Show : undefined,
     };
-    const states = ['default', 'hover', 'focused', 'disabled'] as const;
+    const states = ['default', 'hover', 'focus', 'disabled'] as const;
     const types = ['primary', 'secondary', 'tertiary'] as const;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -164,6 +165,42 @@ export const AllVariants: Story = {
   args: {
     showLeadingIcon: true,
     showTrailingIcon: true,
+    theme: 'light',
+  },
+};
+
+export const InteractivePrimary: Story = {
+  render: renderButton,
+  args: {
+    type: 'primary',
+    state: 'default',
+    label: 'Button',
+    showLeadingIcon: false,
+    showTrailingIcon: false,
+    theme: 'light',
+  },
+};
+
+export const InteractiveSecondary: Story = {
+  render: renderButton,
+  args: {
+    type: 'secondary',
+    state: 'default',
+    label: 'Button',
+    showLeadingIcon: false,
+    showTrailingIcon: false,
+    theme: 'light',
+  },
+};
+
+export const InteractiveTertiary: Story = {
+  render: renderButton,
+  args: {
+    type: 'tertiary',
+    state: 'default',
+    label: 'Button',
+    showLeadingIcon: false,
+    showTrailingIcon: false,
     theme: 'light',
   },
 };

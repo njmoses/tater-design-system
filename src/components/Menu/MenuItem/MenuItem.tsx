@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
@@ -28,6 +29,8 @@ export interface MenuItemProps {
   theme?: Theme;
   /** Additional CSS class name */
   className?: string;
+  /** Callback when item is clicked */
+  onClick?: () => void;
 }
 
 const ICON_SIZE = 24;
@@ -37,43 +40,33 @@ function getMenuItemStyles(
   state: MenuItemState,
   selected: boolean
 ) {
-  const isDisabled = state === 'disabled';
-
-  if (isDisabled && selected) {
-    return {
-      backgroundColor: t.surface.disabled.selected,
-      borderBottom: 'none',
-      textColor: t.text.onColor.placeholder,
-      iconColor: t.icon.disabled.onColor,
-    };
-  }
-
-  if (isDisabled) {
-    return {
-      backgroundColor: t.surface.disabled.default,
-      borderBottom: `${t.borderWidth.xs}px solid ${t.border.disabled.default}`,
-      textColor: t.text.disabled.default,
-      iconColor: t.icon.disabled.default,
-    };
-  }
-
+  const borderBottom = `${t.borderWidth.xs}px solid ${t.border.default.default}`;
   const isHoverLike = state === 'hover' || state === 'active';
+
+  if (state === 'disabled') {
+    return {
+      backgroundColor: selected ? t.surface.disabled.selected : t.surface.disabled.default,
+      borderBottom,
+      textColor: selected ? t.text.disabled.onColor : t.text.disabled.default,
+      iconColor: selected ? t.icon.disabled.onColor : t.icon.disabled.default,
+    };
+  }
 
   if (selected) {
     return {
       backgroundColor: isHoverLike ? t.surface.primary.defaultHover : t.surface.primary.default,
-      borderBottom: `${t.borderWidth.xs}px solid ${isHoverLike ? t.border.primary.defaultHover : t.border.default.default}`,
-      textColor: isHoverLike ? t.text.primary.onColorHover : t.text.primary.onColor,
-      iconColor: isHoverLike ? t.icon.primary.onColorHover : t.icon.primary.onColor,
+      borderBottom,
+      textColor: t.text.primary.onColor,
+      iconColor: t.icon.primary.onColor,
     };
   }
 
   // Not selected
   return {
-    backgroundColor: isHoverLike ? t.surface.primary.defaultSubtleHover : t.base,
-    borderBottom: `${t.borderWidth.xs}px solid ${isHoverLike ? t.border.primary.defaultHover : t.border.default.default}`,
-    textColor: t.text.default.placeholder,
-    iconColor: isHoverLike ? t.icon.primary.defaultHover : t.icon.default.subtle,
+    backgroundColor: isHoverLike ? t.surface.primary.defaultSubtle : 'transparent',
+    borderBottom,
+    textColor: isHoverLike ? t.text.primary.default : t.text.default.body,
+    iconColor: isHoverLike ? t.icon.primary.default : t.icon.default.regular,
   };
 }
 
@@ -87,13 +80,29 @@ export function MenuItem({
   trailingIcon,
   theme = 'light',
   className,
+  onClick,
 }: MenuItemProps) {
   const t = useTokens(theme);
-  const styles = getMenuItemStyles(t, state, selected);
+  const [interactionStatus, setInteractionStatus] = useState<MenuItemState>(state);
+
+  const isDisabled = state === 'disabled';
+  const styles = getMenuItemStyles(t, interactionStatus, selected);
   const typo = typography.body.md;
 
   const LeadingIcon = leadingIcon;
   const TrailingIcon = trailingIcon;
+
+  const handleMouseEnter = () => {
+    if (!isDisabled) setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    setInteractionStatus(state);
+  };
+
+  const handleClick = () => {
+    if (!isDisabled) onClick?.();
+  };
 
   return (
     <div
@@ -110,10 +119,13 @@ export function MenuItem({
         backgroundColor: styles.backgroundColor,
         borderBottom: styles.borderBottom,
         boxSizing: 'border-box',
-        cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
         minWidth: 250,
         width: '100%',
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       {showLeadingIcon && LeadingIcon && (
         <span style={{ flexShrink: 0, display: 'flex' }}>

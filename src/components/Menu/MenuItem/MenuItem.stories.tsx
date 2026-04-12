@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { User01, Lock } from 'react-coolicons';
 import { MenuItem } from './MenuItem';
@@ -35,6 +36,7 @@ const meta: Meta<StoryArgs> = {
       control: 'inline-radio',
       options: ['light', 'dark'],
     },
+    onClick: { action: 'clicked' },
   },
 };
 
@@ -212,6 +214,33 @@ export const AllVariants: Story = {
   args: {
     showLeadingIcon: true,
     showTrailingIcon: true,
+    theme: 'light',
+  },
+};
+
+const InteractiveMenuItemStory = (args: StoryArgs) => {
+  const { showLeadingIcon, showTrailingIcon, ...itemProps } = args;
+  const [selected, setSelected] = useState(false);
+  return (
+    <MenuItem
+      {...itemProps}
+      showLeadingIcon={showLeadingIcon}
+      showTrailingIcon={showTrailingIcon}
+      leadingIcon={showLeadingIcon ? User01 : undefined}
+      trailingIcon={showTrailingIcon ? Lock : undefined}
+      selected={selected}
+      onClick={() => setSelected((v) => !v)}
+    />
+  );
+};
+
+export const Interactive: Story = {
+  render: InteractiveMenuItemStory,
+  args: {
+    state: 'default',
+    label: 'Click to select',
+    showLeadingIcon: true,
+    showTrailingIcon: false,
     theme: 'light',
   },
 };

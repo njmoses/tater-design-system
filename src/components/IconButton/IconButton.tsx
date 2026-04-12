@@ -1,8 +1,9 @@
+import { useState, useRef } from 'react';
 import { useTokens } from '@/tokens';
 import type { Theme } from '@/tokens';
 
 export type IconButtonType = 'primary' | 'secondary' | 'tertiary';
-export type IconButtonState = 'default' | 'hover' | 'focused' | 'disabled';
+export type IconButtonState = 'default' | 'hover' | 'focus' | 'disabled';
 
 export type IconComponent = React.ComponentType<{
   width?: number;
@@ -21,6 +22,10 @@ export interface IconButtonProps {
   theme?: Theme;
   /** Additional CSS class name */
   className?: string;
+  /** Callback when button is clicked */
+  onClick?: () => void;
+  /** HTML button type attribute */
+  htmlType?: 'button' | 'submit' | 'reset';
 }
 
 const ICON_SIZE = 24;
@@ -41,29 +46,26 @@ function getIconButtonStyles(
   }
 
   if (type === 'primary') {
-    const isHover = state === 'hover';
     return {
-      backgroundColor: isHover ? t.surface.primary.defaultHover : t.surface.primary.default,
+      backgroundColor: state === 'hover' ? t.surface.primary.defaultHover : t.surface.primary.default,
       border: 'none',
-      iconColor: isHover ? t.icon.primary.onColorHover : t.icon.primary.onColor,
+      iconColor: t.icon.primary.onColor,
     };
   }
 
   if (type === 'secondary') {
-    const isHover = state === 'hover';
     return {
-      backgroundColor: isHover ? t.surface.primary.defaultSubtleHover : 'transparent',
-      border: `${t.borderWidth.sm}px solid ${isHover ? t.border.primary.defaultHover : t.border.primary.default}`,
-      iconColor: isHover ? t.icon.primary.defaultHover : t.icon.primary.default,
+      backgroundColor: state === 'default' ? 'transparent' : t.surface.primary.defaultSubtle,
+      border: `${t.borderWidth.sm}px solid ${t.border.primary.default}`,
+      iconColor: t.icon.primary.default,
     };
   }
 
   // tertiary
-  const isHover = state === 'hover';
   return {
-    backgroundColor: isHover ? t.surface.primary.defaultSubtleHover : 'transparent',
+    backgroundColor: state === 'hover' ? t.surface.primary.defaultSubtle : 'transparent',
     border: 'none',
-    iconColor: isHover ? t.icon.primary.defaultHover : t.icon.primary.default,
+    iconColor: t.icon.primary.default,
   };
 }
 
@@ -73,17 +75,52 @@ export function IconButton({
   Icon,
   theme = 'light',
   className,
+  onClick,
+  htmlType = 'button',
 }: IconButtonProps) {
   const t = useTokens(theme);
-  const styles = getIconButtonStyles(t, type, state);
+  const [interactionStatus, setInteractionStatus] = useState<IconButtonState>(state);
+  const isFocusedRef = useRef(false);
+
+  const isDisabled = state === 'disabled';
+  const styles = getIconButtonStyles(t, type, interactionStatus);
 
   // Focus ring sits 3px outside the button edge.
   // Secondary adds 2px for its border, so the ring insets 5px from the padding box.
-  const focusInset = type === 'secondary' ? -5 : -3;
+  const focusInset = type === 'secondary' ? -(3 + t.borderWidth.sm) : -3;
+
+  const handleMouseEnter = () => {
+    if (!isDisabled && !isFocusedRef.current) setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (!isFocusedRef.current) setInteractionStatus(state);
+  };
+
+  const handleFocus = () => {
+    isFocusedRef.current = true;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    isFocusedRef.current = false;
+    setInteractionStatus(state);
+  };
+
+  const handleClick = () => {
+    if (!isDisabled) onClick?.();
+  };
 
   return (
-    <div
+    <button
+      type={htmlType}
+      disabled={isDisabled}
       className={className}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onClick={handleClick}
       style={{
         position: 'relative',
         display: 'inline-flex',
@@ -94,15 +131,18 @@ export function IconButton({
         border: styles.border,
         borderRadius: `${t.borderRadius[300]}px`,
         boxSizing: 'border-box',
-        cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        outline: 'none',
+        appearance: 'none',
+        WebkitAppearance: 'none',
       }}
     >
-      {state === 'focused' && (
+      {interactionStatus === 'focus' && (
         <div
           style={{
             position: 'absolute',
             inset: focusInset,
-            border: `${t.borderWidth.xs}px solid ${t.border.primary.default}`,
+            border: `${t.borderWidth.xs}px solid ${t.border.primary.focus}`,
             borderRadius: `${t.borderRadius[400]}px`,
             pointerEvents: 'none',
           }}
@@ -110,6 +150,6 @@ export function IconButton({
       )}
 
       <Icon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
-    </div>
+    </button>
   );
 }

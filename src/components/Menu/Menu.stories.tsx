@@ -14,6 +14,7 @@ const meta: Meta<MenuProps> = {
     items: {
       table: { disable: true },
     },
+    onSelectionChange: { action: 'selectionChanged' },
   },
 };
 
@@ -24,10 +25,10 @@ export const Default: Story = {
   args: {
     theme: 'light',
     items: [
-      { label: 'Profile', state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
-      { label: 'Dashboard', state: 'default', selected: true,  showLeadingIcon: true, leadingIcon: Show,   showTrailingIcon: false },
-      { label: 'Settings',  state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
-      { label: 'Help',      state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show,   showTrailingIcon: false },
+      { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
     ],
   },
 };
@@ -36,10 +37,10 @@ export const WithTrailingIcons: Story = {
   args: {
     theme: 'light',
     items: [
-      { label: 'Profile',   state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show,     showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Dashboard', state: 'default', selected: true,  showLeadingIcon: true, leadingIcon: Show,       showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Settings',  state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Help',      state: 'default', selected: false, showLeadingIcon: true, leadingIcon: Show,       showTrailingIcon: true, trailingIcon: Show },
+      { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
     ],
   },
 };
@@ -48,10 +49,10 @@ export const NoIcons: Story = {
   args: {
     theme: 'light',
     items: [
-      { label: 'Profile',   state: 'default', selected: false, showLeadingIcon: false, showTrailingIcon: false },
-      { label: 'Dashboard', state: 'default', selected: true,  showLeadingIcon: false, showTrailingIcon: false },
-      { label: 'Settings',  state: 'default', selected: false, showLeadingIcon: false, showTrailingIcon: false },
-      { label: 'Help',      state: 'default', selected: false, showLeadingIcon: false, showTrailingIcon: false },
+      { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: false, showTrailingIcon: false },
+      { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: false, showTrailingIcon: false },
+      { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: false, showTrailingIcon: false },
+      { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: false, showTrailingIcon: false },
     ],
   },
 };
@@ -60,11 +61,11 @@ export const WithHoverAndDisabled: Story = {
   args: {
     theme: 'light',
     items: [
-      { label: 'Profile',   state: 'default',  selected: false, showLeadingIcon: true, leadingIcon: Show,     showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Dashboard', state: 'hover',     selected: false, showLeadingIcon: true, leadingIcon: Show,       showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Settings',  state: 'default',   selected: true,  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Favorites', state: 'default',   selected: false, showLeadingIcon: true, leadingIcon: Show,    showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Help',      state: 'disabled',  selected: false, showLeadingIcon: true, leadingIcon: Show,       showTrailingIcon: true, trailingIcon: Show },
+      { id: 'profile',   label: 'Profile',   state: 'default',   showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'dashboard', label: 'Dashboard', state: 'default',   showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'settings',  label: 'Settings',  state: 'default',   showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'favorites', label: 'Favorites', state: 'default',   showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'help',      label: 'Help',      state: 'disabled',  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
     ],
   },
 };
@@ -73,14 +74,10 @@ export const AllStates: Story = {
   args: {
     theme: 'light',
     items: [
-      { label: 'Default',           state: 'default',  selected: false, showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Hover',             state: 'hover',    selected: false, showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Active',            state: 'active',   selected: false, showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Disabled',          state: 'disabled', selected: false, showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Selected',          state: 'default',  selected: true,  showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Selected + Hover',  state: 'hover',    selected: true,  showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Selected + Active', state: 'active',   selected: true,  showLeadingIcon: true, leadingIcon: Show,  showTrailingIcon: true, trailingIcon: Show },
-      { label: 'Selected + Disabled', state: 'disabled', selected: true, showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'default',           label: 'Default',             state: 'default',  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'disabled',          label: 'Disabled',            state: 'disabled', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'selected',          label: 'Selected',            state: 'default',  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
+      { id: 'selected-disabled', label: 'Selected + Disabled', state: 'disabled', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: true, trailingIcon: Show },
     ],
   },
 };
@@ -89,12 +86,49 @@ export const LongList: Story = {
   args: {
     theme: 'light',
     items: Array.from({ length: 12 }, (_, i) => ({
+      id: `item-${i + 1}`,
       label: `Menu item ${i + 1}`,
       state: 'default' as const,
-      selected: i === 2,
       showLeadingIcon: true,
       leadingIcon: Show,
       showTrailingIcon: false,
     })),
+  },
+};
+
+export const Interactive: Story = {
+  args: {
+    theme: 'light',
+    items: [
+      { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+    ],
+  },
+};
+
+export const WithDefaultSelection: Story = {
+  args: {
+    theme: 'light',
+    defaultSelectedId: 'settings',
+    items: [
+      { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+    ],
+  },
+};
+
+export const WithDisabledItems: Story = {
+  args: {
+    theme: 'light',
+    items: [
+      { id: 'profile',   label: 'Profile',   state: 'default',  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'dashboard', label: 'Dashboard', state: 'disabled', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'settings',  label: 'Settings',  state: 'default',  showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+      { id: 'help',      label: 'Help',      state: 'disabled', showLeadingIcon: true, leadingIcon: Show, showTrailingIcon: false },
+    ],
   },
 };

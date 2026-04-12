@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
@@ -122,6 +122,7 @@ export function Field({
 }: FieldProps) {
   const t = useTokens(theme);
   const [interactionStatus, setInteractionStatus] = useState<FieldStatus>(status);
+  const isFocusedRef = useRef(false);
 
   const isDisabled = status === 'disabled';
   const currentValue = value ?? text;
@@ -129,25 +130,26 @@ export function Field({
   const styles = getFieldStyles(t, interactionStatus, isFilled);
   const typo = typography.body.md;
 
-  const showFocusRing =
-    interactionStatus === 'active' || interactionStatus === 'focus';
+  const showFocusRing = interactionStatus === 'focus';
 
   const placeholderClass = PLACEHOLDER_CLASS[theme] ?? PLACEHOLDER_CLASS.light;
 
   const handleMouseEnter = () => {
-    if (!isDisabled) setInteractionStatus('hover');
+    if (!isDisabled && !isFocusedRef.current) setInteractionStatus('hover');
   };
 
   const handleMouseLeave = () => {
-    setInteractionStatus(status);
+    if (!isFocusedRef.current) setInteractionStatus(status);
   };
 
   const handleFocus = () => {
-    setInteractionStatus('active');
+    isFocusedRef.current = true;
+    setInteractionStatus('focus');
     onFocus?.();
   };
 
   const handleBlur = () => {
+    isFocusedRef.current = false;
     setInteractionStatus(status);
     onBlur?.();
   };
@@ -174,7 +176,7 @@ export function Field({
         paddingBottom: t.borderWidth.lg,
         width: 250,
         backgroundColor: styles.backgroundColor,
-        border: `${t.borderWidth.sm}px solid ${styles.borderColor}`,
+        border: `${t.borderWidth.xs}px solid ${styles.borderColor}`,
         borderRadius: t.borderRadius[200],
         boxSizing: 'border-box',
       }}
@@ -188,8 +190,8 @@ export function Field({
         <div
           style={{
             position: 'absolute',
-            inset: -(3 + t.borderWidth.sm),
-            border: `${t.borderWidth.sm}px solid ${t.border.primary.focus}`,
+            inset: -(3 + t.borderWidth.xs),
+            border: `${t.borderWidth.xs}px solid ${t.border.primary.focus}`,
             borderRadius: t.borderRadius[300],
             pointerEvents: 'none',
           }}
