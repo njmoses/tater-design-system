@@ -24,7 +24,10 @@
       "Bash(curl -v --max-time 3 http://127.0.0.1:3845/sse)",
       "mcp__figma__get_figjam",
       "Bash(mkdir -p /Users/nathanmoses/Projects/Portsmith/figma_to_code/tater-design-library/src/components/Carousel/CarouselArrow)",
-      "Bash(mkdir -p /Users/nathanmoses/Projects/Portsmith/figma_to_code/tater-design-library/src/components/Carousel/CarouselIndicator)"
+      "Bash(mkdir -p /Users/nathanmoses/Projects/Portsmith/figma_to_code/tater-design-library/src/components/Carousel/CarouselIndicator)",
+      "Read(//Users/nathanmoses/.claude/**)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://127.0.0.1:3845/sse)"
     ]
   }
 }

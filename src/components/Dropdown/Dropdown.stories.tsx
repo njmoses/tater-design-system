@@ -1,15 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Show } from 'react-coolicons';
 import { Dropdown } from './Dropdown';
-import type { DropdownProps } from './Dropdown';
-import type { MenuItemProps } from '@/components/Menu';
+import type { DropdownProps, DropdownItem } from './Dropdown';
 
-type StoryArgs = DropdownProps & {
-  showLeadingIcon: boolean;
-  showTrailingIcon: boolean;
-};
-
-const meta: Meta<StoryArgs> = {
+const meta: Meta<DropdownProps> = {
   title: 'Components/Dropdown',
   component: Dropdown,
   argTypes: {
@@ -21,60 +15,97 @@ const meta: Meta<StoryArgs> = {
       control: 'inline-radio',
       options: ['default', 'required', 'optional'],
     },
-    showLeadingIcon: { control: 'boolean' },
-    showTrailingIcon: { control: 'boolean' },
     items: { table: { disable: true } },
   },
 };
 
 export default meta;
-type Story = StoryObj<StoryArgs>;
+type Story = StoryObj<DropdownProps>;
 
-const baseItems: MenuItemProps[] = [
-  { label: 'Profile',   state: 'default', selected: false, leadingIcon: Show, trailingIcon: Show },
-  { label: 'Dashboard', state: 'default', selected: true,  leadingIcon: Show, trailingIcon: Show },
-  { label: 'Settings',  state: 'default', selected: false, leadingIcon: Show, trailingIcon: Show },
-  { label: 'Help',      state: 'default', selected: false, leadingIcon: Show, trailingIcon: Show },
+const baseItems: DropdownItem[] = [
+  { id: 'profile',   label: 'Profile',   state: 'default', leadingIcon: Show, trailingIcon: Show },
+  { id: 'dashboard', label: 'Dashboard', state: 'default', leadingIcon: Show, trailingIcon: Show },
+  { id: 'settings',  label: 'Settings',  state: 'default', leadingIcon: Show, trailingIcon: Show },
+  { id: 'help',      label: 'Help',      state: 'default', leadingIcon: Show, trailingIcon: Show },
 ];
 
+// ── Closed (existing, unchanged behaviour) ────────────────────────────────────
 export const Closed: Story = {
   args: {
     text: 'Label',
     hint: 'Hint Text',
-    state: false,
+    status: 'default',
     theme: 'light',
-    showLeadingIcon: true,
-    showTrailingIcon: false,
+    items: baseItems,
+    state: false,
   },
-  render: ({ showLeadingIcon, showTrailingIcon, ...args }) => (
-    <Dropdown
-      {...args}
-      items={baseItems.map(item => ({
-        ...item,
-        showLeadingIcon,
-        showTrailingIcon,
-      }))}
-    />
-  ),
 };
 
+// ── Open (existing, unchanged behaviour) ──────────────────────────────────────
 export const Open: Story = {
   args: {
     text: 'Label',
     hint: 'Hint Text',
-    state: true,
+    status: 'default',
     theme: 'light',
-    showLeadingIcon: true,
-    showTrailingIcon: false,
+    items: baseItems,
+    state: true,
   },
-  render: ({ showLeadingIcon, showTrailingIcon, ...args }) => (
-    <Dropdown
-      {...args}
-      items={baseItems.map(item => ({
-        ...item,
-        showLeadingIcon,
-        showTrailingIcon,
-      }))}
-    />
-  ),
+};
+
+// ── Interactive ────────────────────────────────────────────────────────────────
+// Full open/close and selection behaviour — click the field to open, pick an
+// item to select it, click outside to close.
+export const Interactive: Story = {
+  args: {
+    text: 'Label',
+    hint: 'Hint Text',
+    status: 'default',
+    theme: 'light',
+    items: baseItems,
+  },
+};
+
+// ── WithDefaultSelection ───────────────────────────────────────────────────────
+// One item pre-selected on mount via defaultSelectedId.
+export const WithDefaultSelection: Story = {
+  args: {
+    text: 'Label',
+    hint: 'Hint Text',
+    status: 'default',
+    theme: 'light',
+    items: baseItems,
+    defaultSelectedId: 'dashboard',
+  },
+};
+
+// ── WithDisabledItems ──────────────────────────────────────────────────────────
+// Some items are disabled and cannot be selected.
+export const WithDisabledItems: Story = {
+  args: {
+    text: 'Label',
+    hint: 'Hint Text',
+    status: 'default',
+    theme: 'light',
+    items: [
+      { id: 'profile',   label: 'Profile',   state: 'default',  leadingIcon: Show },
+      { id: 'dashboard', label: 'Dashboard', state: 'disabled', leadingIcon: Show },
+      { id: 'settings',  label: 'Settings',  state: 'default',  leadingIcon: Show },
+      { id: 'help',      label: 'Help',      state: 'disabled', leadingIcon: Show },
+    ],
+    state: true,
+  },
+};
+
+// ── Disabled ───────────────────────────────────────────────────────────────────
+// The entire field is disabled — no hover states, menu never opens.
+export const Disabled: Story = {
+  args: {
+    text: 'Label',
+    hint: 'Hint Text',
+    status: 'default',
+    disabled: true,
+    theme: 'light',
+    items: baseItems,
+  },
 };

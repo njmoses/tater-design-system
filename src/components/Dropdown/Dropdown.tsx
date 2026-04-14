@@ -5,7 +5,10 @@ import type { Theme } from '@/tokens';
 import { Label } from '@/components/Label';
 import type { LabelProps } from '@/components/Label';
 import { Menu } from '@/components/Menu';
-import type { MenuProps } from '@/components/Menu';
+import type { MenuItemConfig, MenuProps } from '@/components/Menu';
+
+/** Menu row shape for `items` — alias of {@link MenuItemConfig}. */
+export type DropdownItem = MenuItemConfig;
 
 export interface DropdownProps extends Omit<LabelProps, 'theme'>, Omit<MenuProps, 'theme'> {
   /** Visual theme */
