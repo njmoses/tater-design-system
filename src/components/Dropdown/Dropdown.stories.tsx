@@ -23,10 +23,10 @@ export default meta;
 type Story = StoryObj<DropdownProps>;
 
 const baseItems: DropdownItem[] = [
-  { id: 'profile',   label: 'Profile',   state: 'default', leadingIcon: Show, trailingIcon: Show },
-  { id: 'dashboard', label: 'Dashboard', state: 'default', leadingIcon: Show, trailingIcon: Show },
-  { id: 'settings',  label: 'Settings',  state: 'default', leadingIcon: Show, trailingIcon: Show },
-  { id: 'help',      label: 'Help',      state: 'default', leadingIcon: Show, trailingIcon: Show },
+  { id: 'profile',   label: 'Profile',   state: 'default', showLeadingIcon: true, leadingIcon: Show },
+  { id: 'dashboard', label: 'Dashboard', state: 'default', showLeadingIcon: true, leadingIcon: Show },
+  { id: 'settings',  label: 'Settings',  state: 'default', showLeadingIcon: true, leadingIcon: Show },
+  { id: 'help',      label: 'Help',      state: 'default', showLeadingIcon: true, leadingIcon: Show },
 ];
 
 // ── Closed (existing, unchanged behaviour) ────────────────────────────────────
@@ -36,6 +36,7 @@ export const Closed: Story = {
     hint: 'Hint Text',
     status: 'default',
     theme: 'light',
+    leadingIcon: Show,
     items: baseItems,
     state: false,
   },
@@ -48,6 +49,7 @@ export const Open: Story = {
     hint: 'Hint Text',
     status: 'default',
     theme: 'light',
+    leadingIcon: Show,
     items: baseItems,
     state: true,
   },
@@ -60,8 +62,10 @@ export const Interactive: Story = {
   args: {
     text: 'Label',
     hint: 'Hint Text',
+    placeholder: 'Select an option',
     status: 'default',
     theme: 'light',
+    leadingIcon: Show,
     items: baseItems,
   },
 };
@@ -72,8 +76,10 @@ export const WithDefaultSelection: Story = {
   args: {
     text: 'Label',
     hint: 'Hint Text',
+    placeholder: 'Select an option',
     status: 'default',
     theme: 'light',
+    leadingIcon: Show,
     items: baseItems,
     defaultSelectedId: 'dashboard',
   },
@@ -85,13 +91,14 @@ export const WithDisabledItems: Story = {
   args: {
     text: 'Label',
     hint: 'Hint Text',
+    placeholder: 'Select an option',
     status: 'default',
     theme: 'light',
     items: [
-      { id: 'profile',   label: 'Profile',   state: 'default',  leadingIcon: Show },
-      { id: 'dashboard', label: 'Dashboard', state: 'disabled', leadingIcon: Show },
-      { id: 'settings',  label: 'Settings',  state: 'default',  leadingIcon: Show },
-      { id: 'help',      label: 'Help',      state: 'disabled', leadingIcon: Show },
+      { id: 'profile',   label: 'Profile',   state: 'default',  showLeadingIcon: true, leadingIcon: Show },
+      { id: 'dashboard', label: 'Dashboard', state: 'disabled', showLeadingIcon: true, leadingIcon: Show },
+      { id: 'settings',  label: 'Settings',  state: 'default',  showLeadingIcon: true, leadingIcon: Show },
+      { id: 'help',      label: 'Help',      state: 'disabled', showLeadingIcon: true, leadingIcon: Show },
     ],
     state: true,
   },
