@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from './Checkbox';
 import type { CheckboxProps } from './Checkbox';
@@ -26,7 +27,7 @@ type Story = StoryObj<CheckboxProps>;
 
 export const Default: Story = {
   args: {
-    state: 'default',
+    state: "default",
     status: 'default',
     label: 'Check Label',
     theme: 'light',
@@ -63,6 +64,31 @@ export const Disabled: Story = {
 export const Error: Story = {
   args: {
     state: 'error',
+    status: 'default',
+    label: 'Check Label',
+    theme: 'light',
+  },
+};
+
+export const Interactive: Story = {
+  render: (args) => {
+    const [selected, setSelected] = useState(false);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Checkbox
+          {...args}
+          status={selected ? 'selected' : 'default'}
+          onChange={setSelected}
+          label="Check Label"
+        />
+        <span style={{ fontSize: 12, color: '#666' }}>
+          State: {selected ? 'selected' : 'default'}
+        </span>
+      </div>
+    );
+  },
+  args: {
+    state: 'default',
     status: 'default',
     label: 'Check Label',
     theme: 'light',

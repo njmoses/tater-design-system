@@ -1,6 +1,7 @@
 import { Check } from 'react-coolicons';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
+import { useState, useEffect, useRef } from 'react';
 
 export type CheckboxState = 'default' | 'hover' | 'focus' | 'disabled' | 'error';
 export type CheckboxStatus = 'default' | 'selected' | 'intermediate';
@@ -10,6 +11,8 @@ export interface CheckboxProps {
   status?: CheckboxStatus;
   label: string;
   theme?: Theme;
+  onChange?: (selected: boolean) => void;
+  onClick?: () => void;
 }
 
 const CHECKBOX_SIZE = 24;
@@ -71,19 +74,63 @@ export function Checkbox({
   status = 'default',
   label,
   theme = 'light',
+  onChange,
+  onClick,
 }: CheckboxProps) {
   const t = useTokens(theme);
-  const styles = getBoxStyles(t, state, status);
   const typo = typography.body.md;
+
+  const [checkState, setCheckState] = useState<CheckboxStatus>(status);
+  const [interactionStatus, setInteractionStatus] = useState<CheckboxState>(state);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const styles = getBoxStyles(t, interactionStatus, checkState);
+
+  const handleMouseEnter = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus(state);
+  };
+
+  const handleFocus = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus(state);
+  };
+
+  const handleClick = () => {
+    if (state === 'disabled') return;
+    onClick?.();
+    const next: CheckboxStatus = checkState === 'selected' ? 'default' : 'selected';
+    setCheckState(next);
+    onChange?.(next === 'selected');
+  };
 
   return (
     <div
+      ref={containerRef}
+      tabIndex={state === 'disabled' ? -1 : 0}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: `${t.borderRadius[300]}px`,
         cursor: styles.cursor,
+        outline: 'none',
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onClick={handleClick}
     >
       <div
         style={{
@@ -112,7 +159,7 @@ export function Checkbox({
           />
         )}
 
-        {status === 'selected' && (
+        {checkState === 'selected' && (
           <Check
             width={ICON_SIZE}
             height={ICON_SIZE}
@@ -120,7 +167,7 @@ export function Checkbox({
           />
         )}
 
-        {status === 'intermediate' && (
+        {checkState === 'intermediate' && (
           <div
             style={{
               width: 12,
