@@ -1,7 +1,7 @@
 import { Check } from 'react-coolicons';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 export type CheckboxState = 'default' | 'hover' | 'focus' | 'disabled' | 'error';
 export type CheckboxStatus = 'default' | 'selected' | 'intermediate';
