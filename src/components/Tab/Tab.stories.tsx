@@ -1,20 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { Show } from 'react-coolicons';
 import { Tab } from './Tab';
 import type { TabProps } from './Tab';
+import { TabItem } from './TabItem/TabItem';
+import type { TabItemProps } from './TabItem/TabItem';
 
 const meta: Meta<TabProps> = {
   title: 'Components/Tab',
   component: Tab,
   argTypes: {
-    status: {
-      control: 'inline-radio',
-      options: ['default', 'hover', 'focus', 'disabled'],
-    },
-    showLeadingIcon: { control: 'boolean' },
-    showTrailingIcon: { control: 'boolean' },
-    leadingIcon: { table: { disable: true } },
-    trailingIcon: { table: { disable: true } },
     theme: {
       control: 'inline-radio',
       options: ['light', 'dark'],
@@ -25,16 +20,18 @@ const meta: Meta<TabProps> = {
 export default meta;
 type Story = StoryObj<TabProps>;
 
-const renderTab = (args: TabProps) => (
-  <Tab
+// ─── Existing single-item reference stories (rendered via TabItem) ───────────
+
+const renderTabItem = (args: TabItemProps) => (
+  <TabItem
     {...args}
     leadingIcon={args.showLeadingIcon ? Show : undefined}
     trailingIcon={args.showTrailingIcon ? Show : undefined}
   />
 );
 
-export const Default: Story = {
-  render: renderTab,
+export const Default: StoryObj<TabItemProps> = {
+  render: renderTabItem,
   args: {
     status: 'default',
     active: false,
@@ -45,8 +42,8 @@ export const Default: Story = {
   },
 };
 
-export const Hover: Story = {
-  render: renderTab,
+export const Hover: StoryObj<TabItemProps> = {
+  render: renderTabItem,
   args: {
     status: 'hover',
     active: false,
@@ -57,8 +54,8 @@ export const Hover: Story = {
   },
 };
 
-export const Focus: Story = {
-  render: renderTab,
+export const Focus: StoryObj<TabItemProps> = {
+  render: renderTabItem,
   args: {
     status: 'focus',
     active: false,
@@ -69,8 +66,8 @@ export const Focus: Story = {
   },
 };
 
-export const Disabled: Story = {
-  render: renderTab,
+export const Disabled: StoryObj<TabItemProps> = {
+  render: renderTabItem,
   args: {
     status: 'disabled',
     active: false,
@@ -81,41 +78,82 @@ export const Disabled: Story = {
   },
 };
 
-// Shows a full tab bar with multiple tab items and a bottom keyline
+// ─── TabBar (migrated to Tab container) ─────────────────────────────────────
+
 export const TabBar: Story = {
+  render: (args) => (
+    <Tab
+      {...args}
+      items={[
+        { id: 'tab-1', label: 'Tab label', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-2', label: 'Tab label', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-3', label: 'Tab label', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-4', label: 'Tab label', showLeadingIcon: true, leadingIcon: Show },
+      ]}
+      defaultActiveId="tab-1"
+    />
+  ),
+  args: {
+    theme: 'light',
+  },
+};
+
+// ─── New stories ─────────────────────────────────────────────────────────────
+
+export const Interactive: Story = {
   render: (args) => {
-    const tabs = [
-      { label: 'Tab label', active: true },
-      { label: 'Tab label', active: false },
-      { label: 'Tab label', active: false },
-      { label: 'Tab label', active: false },
-    ];
+    const [activeId, setActiveId] = useState('tab-1');
     return (
-      <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', gap: 12 }}>
-          {tabs.map((tab, i) => (
-            <Tab
-              key={i}
-              status={args.status}
-              active={tab.active}
-              label={tab.label}
-              showLeadingIcon={args.showLeadingIcon}
-              showTrailingIcon={args.showTrailingIcon}
-              leadingIcon={args.showLeadingIcon ? Show : undefined}
-              trailingIcon={args.showTrailingIcon ? Show : undefined}
-              theme={args.theme}
-            />
-          ))}
-        </div>
-        {/* Keyline */}
-        <div style={{ height: 1, backgroundColor: '#c9c9cb', width: '100%' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <Tab
+          {...args}
+          items={[
+            { id: 'tab-1', label: 'Overview', showLeadingIcon: true, leadingIcon: Show },
+            { id: 'tab-2', label: 'Details', showLeadingIcon: true, leadingIcon: Show },
+            { id: 'tab-3', label: 'Settings', showLeadingIcon: true, leadingIcon: Show },
+          ]}
+          defaultActiveId={activeId}
+          onTabChange={setActiveId}
+        />
+        <span style={{ fontSize: 12, color: '#666' }}>Active tab: {activeId}</span>
       </div>
     );
   },
   args: {
-    status: 'default',
-    showLeadingIcon: true,
-    showTrailingIcon: false,
+    theme: 'light',
+  },
+};
+
+export const WithDefaultActive: Story = {
+  render: (args) => (
+    <Tab
+      {...args}
+      items={[
+        { id: 'tab-1', label: 'First', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-2', label: 'Second', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-3', label: 'Third', showLeadingIcon: true, leadingIcon: Show },
+      ]}
+      defaultActiveId="tab-2"
+    />
+  ),
+  args: {
+    theme: 'light',
+  },
+};
+
+export const WithDisabledTab: Story = {
+  render: (args) => (
+    <Tab
+      {...args}
+      items={[
+        { id: 'tab-1', label: 'Enabled', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-2', label: 'Disabled', status: 'disabled', showLeadingIcon: true, leadingIcon: Show },
+        { id: 'tab-3', label: 'Also Enabled', showLeadingIcon: true, leadingIcon: Show },
+      ]}
+      defaultActiveId="tab-1"
+    />
+  ),
+  args: {
     theme: 'light',
   },
 };

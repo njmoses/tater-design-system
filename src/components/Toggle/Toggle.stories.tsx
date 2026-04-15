@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { Toggle } from './Toggle';
 import type { ToggleProps } from './Toggle';
 
@@ -22,7 +23,7 @@ type Story = StoryObj<ToggleProps>;
 
 export const Default: Story = {
   args: {
-    status: "focus",
+    status: "default",
     active: false,
     label: 'Toggle Label',
     theme: 'light',
@@ -52,6 +53,29 @@ export const Disabled: Story = {
     status: 'disabled',
     active: false,
     label: 'Toggle Label',
+    theme: 'light',
+  },
+};
+
+export const Interactive: Story = {
+  render: (args) => {
+    const [isActive, setIsActive] = useState(false);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Toggle
+          {...args}
+          active={isActive}
+          onChange={(active) => setIsActive(active)}
+          label={isActive ? 'On' : 'Off'}
+        />
+        <span style={{ fontSize: 12, color: '#666' }}>
+          State: {isActive ? 'active' : 'inactive'}
+        </span>
+      </div>
+    );
+  },
+  args: {
+    status: 'default',
     theme: 'light',
   },
 };

@@ -1,150 +1,72 @@
-import { useTokens, typography } from '@/tokens';
+import { useTokens } from '@/tokens';
 import type { Theme } from '@/tokens';
+import { useState } from 'react';
+import { TabItem } from './TabItem/TabItem';
+import type { TabStatus, IconComponent } from './TabItem/TabItem';
 
-export type IconComponent = React.ComponentType<{
-  width?: number;
-  height?: number;
-  color?: string;
-}>;
+export type { TabStatus, IconComponent };
 
-export type TabStatus = 'default' | 'hover' | 'focus' | 'disabled';
-
-export interface TabProps {
-  status?: TabStatus;
-  active?: boolean;
+export interface TabItemConfig {
+  id: string;
   label: string;
+  status?: TabStatus;
   showLeadingIcon?: boolean;
   leadingIcon?: IconComponent;
   showTrailingIcon?: boolean;
   trailingIcon?: IconComponent;
+}
+
+export interface TabProps {
+  items: TabItemConfig[];
+  defaultActiveId?: string;
+  onTabChange?: (id: string) => void;
   theme?: Theme;
 }
 
-const ICON_SIZE = 24;
-
-function getTabStyles(
-  t: ReturnType<typeof useTokens>,
-  status: TabStatus,
-  active: boolean
-) {
-  if (status === 'disabled') {
-    return {
-      backgroundColor: 'transparent',
-      bottomBorderColor: active ? t.border.disabled.default : null,
-      textColor: t.text.disabled.default,
-      iconColor: t.icon.disabled.default,
-      semibold: false,
-    };
-  }
-
-  if (status === 'hover') {
-    return {
-      backgroundColor: t.surface.primary.defaultSubtleHover,
-      bottomBorderColor: active ? t.border.primary.defaultHover : null,
-      textColor: t.text.primary.defaultHover,
-      iconColor: t.icon.primary.defaultHover,
-      semibold: false,
-    };
-  }
-
-  // default or focus
-  if (active) {
-    return {
-      backgroundColor: status === 'focus' ? t.surface.primary.defaultSubtle : 'transparent',
-      bottomBorderColor: t.border.primary.default,
-      textColor: t.text.default.body,
-      iconColor: t.icon.primary.default,
-      semibold: true,
-    };
-  }
-
-  return {
-    backgroundColor: 'transparent',
-    bottomBorderColor: null as string | null,
-    textColor: t.text.default.body,
-    iconColor: t.icon.default.regular,
-    semibold: false,
-  };
-}
-
 export function Tab({
-  status = 'default',
-  active = false,
-  label,
-  showLeadingIcon = false,
-  leadingIcon,
-  showTrailingIcon = false,
-  trailingIcon,
+  items,
+  defaultActiveId,
+  onTabChange,
   theme = 'light',
 }: TabProps) {
   const t = useTokens(theme);
-  const styles = getTabStyles(t, status, active);
-  const typo = styles.semibold ? typography.body.mdSemibold : typography.body.md;
-  const LeadingIcon = leadingIcon;
-  const TrailingIcon = trailingIcon;
-  const showFocusRing = status === 'focus';
+
+  const firstEnabled = items.find((item) => item.status !== 'disabled');
+  const [activeId, setActiveId] = useState<string>(
+    defaultActiveId ?? firstEnabled?.id ?? ''
+  );
+
+  const handleTabClick = (id: string) => {
+    setActiveId(id);
+    onTabChange?.(id);
+  };
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: `${t.layoutSpacing.xsm}px`,
-        paddingTop: `${t.borderRadius[300]}px`,
-        paddingBottom: `${t.borderRadius[300]}px`,
-        paddingLeft: `${t.layoutSpacing.sm}px`,
-        paddingRight: `${t.layoutSpacing.sm}px`,
-        backgroundColor: styles.backgroundColor,
-        borderBottom: styles.bottomBorderColor
-          ? `${t.borderWidth.md}px solid ${styles.bottomBorderColor}`
-          : 'none',
-        boxSizing: 'border-box',
-        cursor: status === 'disabled' ? 'not-allowed' : 'pointer',
-      }}
-    >
-      {showFocusRing && (
-        <div
-          style={{
-            position: 'absolute',
-            top: -2,
-            right: -2,
-            // Extend 6px below when active to clear the 4px active indicator + 2px gap
-            bottom: active ? -6 : -2,
-            left: -2,
-            border: `${t.borderWidth.xs}px solid ${t.border.primary.default}`,
-            borderRadius: `${t.borderRadius[100]}px`,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
-      {showLeadingIcon && LeadingIcon && (
-        <span style={{ flexShrink: 0, display: 'flex' }}>
-          <LeadingIcon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
-        </span>
-      )}
-
-      <span
+    <div style={{ display: 'inline-flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex' }}>
+        {items.map((item) => (
+          <TabItem
+            key={item.id}
+            status={item.status}
+            active={item.id === activeId}
+            label={item.label}
+            showLeadingIcon={item.showLeadingIcon}
+            leadingIcon={item.leadingIcon}
+            showTrailingIcon={item.showTrailingIcon}
+            trailingIcon={item.trailingIcon}
+            theme={theme}
+            onClick={() => handleTabClick(item.id)}
+          />
+        ))}
+      </div>
+      {/* Keyline */}
+      <div
         style={{
-          fontFamily: typo.fontFamily,
-          fontSize: `${typo.fontSize}px`,
-          fontWeight: typo.fontWeight,
-          lineHeight: `${typo.lineHeight}px`,
-          letterSpacing: typo.letterSpacing,
-          color: styles.textColor,
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
+          height: t.borderWidth.xs,
+          backgroundColor: t.border.default.default,
+          width: '100%',
         }}
-      >
-        {label}
-      </span>
-
-      {showTrailingIcon && TrailingIcon && (
-        <span style={{ flexShrink: 0, display: 'flex' }}>
-          <TrailingIcon width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
-        </span>
-      )}
+      />
     </div>
   );
 }

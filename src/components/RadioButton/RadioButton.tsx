@@ -1,5 +1,6 @@
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
+import { useState, useRef, useEffect } from 'react';
 
 export type RadioButtonStatus = 'default' | 'hover' | 'focus' | 'disabled';
 
@@ -8,6 +9,8 @@ export interface RadioButtonProps {
   active?: boolean;
   label: string;
   theme?: Theme;
+  onChange?: (active: boolean) => void;
+  onClick?: () => void;
 }
 
 const RADIO_SIZE = 26;
@@ -59,18 +62,73 @@ export function RadioButton({
   active = false,
   label,
   theme = 'light',
+  onChange,
+  onClick,
 }: RadioButtonProps) {
   const t = useTokens(theme);
-  const styles = getRadioStyles(t, status, active);
   const typo = typography.body.md;
+
+  const [activeState, setActiveState] = useState(active);
+  const [interactionStatus, setInteractionStatus] = useState(status);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (status === 'disabled') return;
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setActiveState(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [status]);
+
+  const handleMouseEnter = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleFocus = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleClick = () => {
+    if (status === 'disabled') return;
+    setActiveState(true);
+    onChange?.(true);
+    onClick?.();
+  };
+
+  const styles = getRadioStyles(t, interactionStatus, activeState);
 
   return (
     <div
+      ref={containerRef}
+      tabIndex={status === 'disabled' ? -1 : 0}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onClick={handleClick}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: `${t.borderRadius[300]}px`,
         cursor: styles.cursor,
+        outline: 'none',
       }}
     >
       <div
@@ -100,7 +158,7 @@ export function RadioButton({
           />
         )}
 
-        {active && (
+        {activeState && (
           <div
             style={{
               width: DOT_SIZE,

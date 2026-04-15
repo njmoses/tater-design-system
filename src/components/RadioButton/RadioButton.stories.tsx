@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { RadioButton } from './RadioButton';
 import type { RadioButtonProps } from './RadioButton';
 
@@ -55,6 +56,29 @@ export const Disabled: Story = {
     status: 'disabled',
     active: false,
     label: 'Radio Label',
+    theme: 'light',
+  },
+};
+
+export const Interactive: Story = {
+  render: (args) => {
+    const [isActive, setIsActive] = useState(false);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <RadioButton
+          {...args}
+          active={isActive}
+          onChange={(active) => setIsActive(active)}
+          label={isActive ? 'Selected' : 'Click to select'}
+        />
+        <span style={{ fontSize: 12, color: '#666' }}>
+          State: {isActive ? 'active' : 'inactive'}
+        </span>
+      </div>
+    );
+  },
+  args: {
+    status: 'default',
     theme: 'light',
   },
 };

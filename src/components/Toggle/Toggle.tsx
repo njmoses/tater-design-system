@@ -1,5 +1,6 @@
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
+import { useState } from 'react';
 
 export type ToggleStatus = 'default' | 'hover' | 'focus' | 'disabled';
 
@@ -8,13 +9,16 @@ export interface ToggleProps {
   active?: boolean;
   label: string;
   theme?: Theme;
+  onChange?: (active: boolean) => void;
+  onClick?: () => void;
 }
 
 const TRACK_WIDTH   = 48;
 const TRACK_HEIGHT  = 24;
-const KNOB_SIZE     = 20;
-const TRACK_PADDING = 2;  // scale/50 = 2px
+const KNOB_SIZE     = 18;
+const TRACK_PADDING = 3;  // 3px gap between knob and track edge
 const FOCUS_GAP     = 2;  // px of visual space between track border and focus ring border
+const KNOB_TRAVEL   = TRACK_WIDTH - 2 * TRACK_PADDING - KNOB_SIZE; // 24px
 
 function getTrackStyles(
   t: ReturnType<typeof useTokens>,
@@ -55,12 +59,46 @@ export function Toggle({
   active = false,
   label,
   theme = 'light',
+  onChange,
+  onClick,
 }: ToggleProps) {
   const t = useTokens(theme);
-  const trackStyles = getTrackStyles(t, status, active);
-  const knobColor   = getKnobColor(t, status, active);
-  const typo        = typography.body.md;
-  const showFocusRing = status === 'focus';
+  const typo = typography.body.md;
+
+  const [activeState, setActiveState] = useState(active);
+  const [interactionStatus, setInteractionStatus] = useState(status);
+
+  const handleMouseEnter = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleFocus = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleClick = () => {
+    if (status === 'disabled') return;
+    const next = !activeState;
+    setActiveState(next);
+    onChange?.(next);
+    onClick?.();
+  };
+
+  const trackStyles  = getTrackStyles(t, interactionStatus, activeState);
+  const knobColor    = getKnobColor(t, interactionStatus, activeState);
+  const showFocusRing = interactionStatus === 'focus';
 
   // Focus ring offset: FOCUS_GAP + track border width, so the visual gap is exactly FOCUS_GAP px
   const focusOffset = -(FOCUS_GAP + t.borderWidth.sm);
@@ -69,11 +107,18 @@ export function Toggle({
 
   return (
     <div
+      tabIndex={status === 'disabled' ? -1 : 0}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onClick={handleClick}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: `${t.borderRadius[300]}px`,
         cursor: status === 'disabled' ? 'not-allowed' : 'pointer',
+        outline: 'none',
       }}
     >
       {/* Track */}
@@ -90,7 +135,7 @@ export function Toggle({
           display: 'flex',
           alignItems: 'center',
           padding: `0 ${TRACK_PADDING}px`,
-          justifyContent: active ? 'flex-end' : 'flex-start',
+          justifyContent: 'flex-start',
         }}
       >
         {showFocusRing && (
@@ -116,6 +161,8 @@ export function Toggle({
             height: KNOB_SIZE,
             borderRadius: '50%',
             backgroundColor: knobColor,
+            transform: activeState ? `translateX(${KNOB_TRAVEL}px)` : 'translateX(0)',
+            transition: 'transform 200ms ease',
           }}
         />
       </div>
