@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Info } from 'react-coolicons';
-import { VerticalNavigation } from './VerticalNavigation';
-import type { VerticalNavigationProps } from './VerticalNavigation';
+import { useState } from 'react';
+import { Heart01 } from 'react-coolicons';
+import { VerticalNav } from './VerticalNav';
+import type { VerticalNavProps } from './VerticalNav';
 
-type StoryArgs = VerticalNavigationProps & {
+type StoryArgs = VerticalNavProps & {
   showLeadingIconToggle?: boolean;
 };
 
 const meta: Meta<StoryArgs> = {
-  title: 'Components/VerticalNavigation',
-  component: VerticalNavigation,
+  title: 'Components/VerticalNav',
+  component: VerticalNav,
   argTypes: {
     status: {
       control: 'inline-radio',
@@ -40,9 +41,9 @@ type Story = StoryObj<StoryArgs>;
 
 const render = (args: StoryArgs) => (
   <div style={{ width: 220 }}>
-    <VerticalNavigation
+    <VerticalNav
       {...args}
-      leadingIcon={args.showLeadingIcon ? Info : undefined}
+      leadingIcon={args.showLeadingIcon ? Heart01 : undefined}
     />
   </div>
 );
@@ -158,12 +159,12 @@ export const AllVariants: Story = {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
                   <p style={{ fontSize: 10, color: '#bbb', marginBottom: 2 }}>unselected</p>
-                  <VerticalNavigation
+                  <VerticalNav
                     status={status}
                     selected={false}
                     level={1}
                     showLeadingIcon={true}
-                    leadingIcon={Info}
+                    leadingIcon={Heart01}
                     initialItems={[
                       { id: 'a', label: 'Anchor Item' },
                       { id: 'b', label: 'Anchor Item' },
@@ -172,12 +173,12 @@ export const AllVariants: Story = {
                 </div>
                 <div>
                   <p style={{ fontSize: 10, color: '#bbb', marginBottom: 2 }}>selected</p>
-                  <VerticalNavigation
+                  <VerticalNav
                     status={status}
                     selected={true}
                     level={1}
                     showLeadingIcon={true}
-                    leadingIcon={Info}
+                    leadingIcon={Heart01}
                     initialItems={[
                       { id: 'c', label: 'Anchor Item' },
                       { id: 'd', label: 'Anchor Item' },
@@ -199,12 +200,12 @@ export const AllVariants: Story = {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
                   <p style={{ fontSize: 10, color: '#bbb', marginBottom: 2 }}>unselected</p>
-                  <VerticalNavigation
+                  <VerticalNav
                     status={status}
                     selected={false}
                     level={2}
                     showLeadingIcon={true}
-                    leadingIcon={Info}
+                    leadingIcon={Heart01}
                     initialItems={[
                       { id: 'e', label: 'Anchor Item' },
                       { id: 'f', label: 'Anchor Item' },
@@ -213,12 +214,12 @@ export const AllVariants: Story = {
                 </div>
                 <div>
                   <p style={{ fontSize: 10, color: '#bbb', marginBottom: 2 }}>selected</p>
-                  <VerticalNavigation
+                  <VerticalNav
                     status={status}
                     selected={true}
                     level={2}
                     showLeadingIcon={true}
-                    leadingIcon={Info}
+                    leadingIcon={Heart01}
                     initialItems={[
                       { id: 'g', label: 'Anchor Item' },
                       { id: 'h', label: 'Anchor Item' },
@@ -232,4 +233,59 @@ export const AllVariants: Story = {
       </div>
     </div>
   ),
+};
+
+export const Interactive: Story = {
+  render: () => {
+    const [lastSelected, setLastSelected] = useState<string | null>(null);
+    return (
+      <div style={{ width: 220 }}>
+        <VerticalNav
+          status="default"
+          level={1}
+          showLeadingIcon
+          leadingIcon={Heart01}
+          theme="light"
+          initialItems={[
+            { id: 'item-1', label: 'Dashboard' },
+            { id: 'item-2', label: 'Projects' },
+            { id: 'item-3', label: 'Settings' },
+            { id: 'item-4', label: 'Profile' },
+          ]}
+          onSelectionChange={(id) => setLastSelected(id)}
+        />
+        <p style={{ fontSize: 12, marginTop: 8, color: '#666' }}>
+          Selected: {lastSelected ?? 'none'}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const WithDefaultSelection: Story = {
+  render: () => {
+    const [lastSelected, setLastSelected] = useState<string>('item-2');
+    return (
+      <div style={{ width: 220 }}>
+        <VerticalNav
+          status="default"
+          level={1}
+          showLeadingIcon
+          leadingIcon={Heart01}
+          theme="light"
+          defaultSelectedId="item-2"
+          initialItems={[
+            { id: 'item-1', label: 'Dashboard' },
+            { id: 'item-2', label: 'Projects' },
+            { id: 'item-3', label: 'Settings' },
+            { id: 'item-4', label: 'Profile' },
+          ]}
+          onSelectionChange={(id) => setLastSelected(id)}
+        />
+        <p style={{ fontSize: 12, marginTop: 8, color: '#666' }}>
+          Selected: {lastSelected}
+        </p>
+      </div>
+    );
+  },
 };

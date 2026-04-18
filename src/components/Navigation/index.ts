@@ -1,7 +1,5 @@
-export { NavItem, Navigation } from './Navigation';
-export type {
-  NavItemProps,
-  NavItemStatus,
-  NavigationProps,
-  IconComponent,
-} from './Navigation';
+export { Navigation } from './Navigation';
+export type { NavigationProps } from './Navigation';
+
+export { NavItem } from './NavItem';
+export type { NavItemProps } from './NavItem';

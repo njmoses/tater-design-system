@@ -1,90 +1,21 @@
-import { useTokens, typography } from '@/tokens';
+import { useState } from 'react';
+import { useTokens } from '@/tokens';
 import type { Theme } from '@/tokens';
 import { Button } from '@/components/Button/Button';
 import type { ButtonProps, ButtonState } from '@/components/Button/Button';
+import { NavItem } from './NavItem';
+import type { NavItemStatus } from './NavItem/NavItem';
 
-export type IconComponent = React.ComponentType<{
-  width?: number;
-  height?: number;
-  color?: string;
-}>;
+export type { NavItemStatus } from './NavItem/NavItem';
 
-export type NavItemStatus = 'default' | 'hover' | 'focus' | 'selected';
-
-// ─── NavItem ─────────────────────────────────────────────────────────────────
-
-export interface NavItemProps {
+export interface NavItemConfig {
+  id: string;
   label?: string;
   status?: NavItemStatus;
-  theme?: Theme;
 }
-
-function getNavItemStyles(t: ReturnType<typeof useTokens>, status: NavItemStatus) {
-  switch (status) {
-    case 'hover':
-      return { textColor: t.text.primary.defaultHover };
-    case 'selected':
-      return { textColor: t.text.primary.default };
-    default:
-      return { textColor: t.text.default.body };
-  }
-}
-
-export function NavItem({ label = 'Nav Item', status = 'default', theme = 'light' }: NavItemProps) {
-  const t = useTokens(theme);
-  const { textColor } = getNavItemStyles(t, status);
-  const typo = typography.body.md;
-
-  return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: `${t.layoutSpacing.xsm}px`,
-        height: 40,
-        padding: `${t.layoutSpacing.xsm}px`,
-        boxSizing: 'border-box',
-      }}
-    >
-      {status === 'focus' && (
-        <div
-          style={{
-            position: 'absolute',
-            top: -2,
-            bottom: -2,
-            left: -2,
-            right: -2,
-            border: `${t.borderWidth.xs}px solid ${t.border.primary.focus}`,
-            borderRadius: `${t.borderRadius[100]}px`,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
-      <span
-        style={{
-          fontFamily: typo.fontFamily,
-          fontSize: `${typo.fontSize}px`,
-          fontWeight: typo.fontWeight,
-          lineHeight: `${typo.lineHeight}px`,
-          letterSpacing: typo.letterSpacing,
-          color: textColor,
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
-
-// ─── Navigation ───────────────────────────────────────────────────────────────
 
 export interface NavigationProps {
-  /** Status applied to all nav items */
+  /** Status applied to all nav items (can be overridden per item) */
   status?: NavItemStatus;
   /** State for the Login (tertiary) button */
   loginButtonState?: ButtonState;
@@ -95,7 +26,24 @@ export interface NavigationProps {
   /** Props forwarded to the Signup button (merged with defaults) */
   signupButtonProps?: Partial<Omit<ButtonProps, 'label' | 'type'>>;
   theme?: Theme;
+  /** Nav items to render — defaults to 4 unlabelled items */
+  navItems?: NavItemConfig[];
+  /** Optionally pre-select a nav item by id on mount */
+  defaultSelectedId?: string;
+  /** Fired whenever the selected nav item changes */
+  onSelectionChange?: (id: string) => void;
+  /** Callback for the Login button */
+  onLoginClick?: () => void;
+  /** Callback for the Signup button */
+  onSignupClick?: () => void;
 }
+
+const DEFAULT_NAV_ITEMS: NavItemConfig[] = [
+  { id: 'nav-1', label: 'Nav Item' },
+  { id: 'nav-2', label: 'Nav Item' },
+  { id: 'nav-3', label: 'Nav Item' },
+  { id: 'nav-4', label: 'Nav Item' },
+];
 
 export function Navigation({
   status = 'default',
@@ -104,8 +52,19 @@ export function Navigation({
   loginButtonProps,
   signupButtonProps,
   theme = 'light',
+  navItems = DEFAULT_NAV_ITEMS,
+  defaultSelectedId,
+  onSelectionChange,
+  onLoginClick,
+  onSignupClick,
 }: NavigationProps) {
   const t = useTokens(theme);
+  const [selectedId, setSelectedId] = useState<string | null>(defaultSelectedId ?? null);
+
+  const handleItemClick = (id: string) => {
+    setSelectedId(id);
+    onSelectionChange?.(id);
+  };
 
   return (
     <div
@@ -127,10 +86,24 @@ export function Navigation({
           minWidth: 0,
         }}
       >
-        <NavItem label="Nav Item" status={status} theme={theme} />
-        <NavItem label="Nav Item" status={status} theme={theme} />
-        <NavItem label="Nav Item" status={status} theme={theme} />
-        <NavItem label="Nav Item" status={status} theme={theme} />
+        {navItems.map((item) => {
+          // selectedId (from interaction or defaultSelectedId) drives selection.
+          // Fall back to per-item status === 'selected' for backward compatibility.
+          const isSelected = selectedId !== null
+            ? item.id === selectedId
+            : item.status === 'selected';
+
+          return (
+            <NavItem
+              key={item.id}
+              label={item.label}
+              status={item.status ?? status}
+              selected={isSelected}
+              theme={theme}
+              onClick={() => handleItemClick(item.id)}
+            />
+          );
+        })}
       </div>
 
       {/* Buttons — right aligned */}
@@ -147,6 +120,7 @@ export function Navigation({
           label="Login"
           state={loginButtonState}
           theme={theme}
+          onClick={onLoginClick}
           {...loginButtonProps}
         />
         <Button
@@ -154,6 +128,7 @@ export function Navigation({
           label="Signup"
           state={signupButtonState}
           theme={theme}
+          onClick={onSignupClick}
           {...signupButtonProps}
         />
       </div>
