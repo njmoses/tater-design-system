@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
@@ -19,6 +20,8 @@ export interface LinkProps {
   showTrailingIcon: boolean;
   trailingIcon?: IconComponent;
   theme?: Theme;
+  onClick?: () => void;
+  href?: string;
 }
 
 const ICON_SIZE = 24;
@@ -58,28 +61,60 @@ export function Link({
   showTrailingIcon,
   trailingIcon,
   theme = 'light',
+  onClick,
+  href,
 }: LinkProps) {
+  const [interactionStatus, setInteractionStatus] = useState(status);
   const t = useTokens(theme);
-  const { textColor, iconColor, backgroundColor, borderRadius } = getLinkStyles(t, status);
+
+  const handleMouseEnter = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleFocus = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    if (status === 'disabled') return;
+    setInteractionStatus(status);
+  };
+
+  const handleClick = () => {
+    if (status === 'disabled') return;
+    onClick?.();
+  };
+
+  const { textColor, iconColor, backgroundColor, borderRadius } = getLinkStyles(t, interactionStatus);
   const typo = type === 'inline' ? typography.body.mdLink : typography.body.md;
 
   const LeadingIcon = leadingIcon;
   const TrailingIcon = trailingIcon;
 
-  return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: `${t.layoutSpacing.xsm}px`,
-        backgroundColor,
-        borderRadius,
-        cursor: status === 'disabled' ? 'not-allowed' : 'pointer',
-      }}
-    >
-      {status === 'focus' && (
+  const isDisabled = status === 'disabled';
+
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: `${t.layoutSpacing.xsm}px`,
+    backgroundColor,
+    borderRadius,
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+    textDecoration: 'none',
+  };
+
+  const content = (
+    <>
+      {interactionStatus === 'focus' && (
         <div
           style={{
             position: 'absolute',
@@ -121,6 +156,30 @@ export function Link({
           <TrailingIcon width={ICON_SIZE} height={ICON_SIZE} color={iconColor} />
         </span>
       )}
-    </div>
+    </>
+  );
+
+  if (isDisabled) {
+    return (
+      <span style={containerStyle} aria-disabled="true">
+        {content}
+      </span>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      role="link"
+      tabIndex={0}
+      style={containerStyle}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onClick={handleClick}
+    >
+      {content}
+    </a>
   );
 }

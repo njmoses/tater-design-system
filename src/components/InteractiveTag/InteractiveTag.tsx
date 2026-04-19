@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { AddPlus, CloseSm } from 'react-coolicons';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
@@ -9,10 +10,8 @@ export interface InteractiveTagProps {
   selected?: boolean;
   /** Visual interaction state */
   state?: 'default' | 'hover' | 'focus' | 'disabled';
-  /** Called when the unselected tag is clicked */
-  onSelect?: () => void;
-  /** Called when the selected tag's close icon is clicked */
-  onDeselect?: () => void;
+  /** Called when selected state toggles — receives the new boolean value */
+  onSelect?: (selected: boolean) => void;
   /** Visual theme */
   theme?: Theme;
 }
@@ -22,19 +21,48 @@ export function InteractiveTag({
   selected = false,
   state = 'default',
   onSelect,
-  onDeselect,
   theme = 'light',
 }: InteractiveTagProps) {
+  const [selectedState, setSelectedState] = useState(selected);
+  const [interactionStatus, setInteractionStatus] = useState(state);
   const t = useTokens(theme);
+
   const isDisabled = state === 'disabled';
-  const isHover = state === 'hover';
-  const isFocus = state === 'focus';
+  const isHover = interactionStatus === 'hover';
+  const isFocus = interactionStatus === 'focus';
+
+  const handleMouseEnter = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus('hover');
+  };
+
+  const handleMouseLeave = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus(state);
+  };
+
+  const handleFocus = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus('focus');
+  };
+
+  const handleBlur = () => {
+    if (state === 'disabled') return;
+    setInteractionStatus(state);
+  };
+
+  const handleClick = () => {
+    if (state === 'disabled') return;
+    const next = !selectedState;
+    setSelectedState(next);
+    onSelect?.(next);
+  };
 
   // ── Background ───────────────────────────────────────────────────────────
   let backgroundColor: string;
   if (isDisabled) {
     backgroundColor = t.surface.disabled.default;
-  } else if (selected) {
+  } else if (selectedState) {
     backgroundColor = isHover
       ? t.surface.primary.defaultHover
       : t.surface.primary.default;
@@ -48,7 +76,7 @@ export function InteractiveTag({
   const borderColor = isDisabled
     ? t.border.disabled.default
     : t.border.primary.default;
-  const borderStyle = isDisabled || selected ? 'solid' : 'dashed';
+  const borderStyle = isDisabled || selectedState ? 'solid' : 'dashed';
 
   // ── Text & icon colours ───────────────────────────────────────────────────
   let textColor: string;
@@ -56,7 +84,7 @@ export function InteractiveTag({
   if (isDisabled) {
     textColor = t.text.disabled.default;
     iconColor = t.icon.disabled.default;
-  } else if (selected) {
+  } else if (selectedState) {
     textColor = t.text.primary.onColor;
     iconColor = t.icon.primary.onColor;
   } else {
@@ -65,22 +93,24 @@ export function InteractiveTag({
   }
 
   // ── Padding: unselected → left narrow / right wide; selected → reversed ──
-  const paddingLeft = selected
+  const paddingLeft = selectedState
     ? `${t.layoutSpacing.xsm}px`
     : `${t.layoutSpacing['2xsm']}px`;
-  const paddingRight = selected
+  const paddingRight = selectedState
     ? `${t.layoutSpacing['2xsm']}px`
     : `${t.layoutSpacing.xsm}px`;
 
-  const handleClick = () => {
-    if (isDisabled) return;
-    if (selected) onDeselect?.();
-    else onSelect?.();
-  };
-
   return (
     <div
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      aria-pressed={selectedState}
+      aria-disabled={isDisabled ? 'true' : undefined}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -99,7 +129,7 @@ export function InteractiveTag({
         userSelect: 'none',
       }}
     >
-      {!selected && (
+      {!selectedState && (
         <AddPlus width={24} height={24} color={iconColor} />
       )}
 
@@ -117,7 +147,7 @@ export function InteractiveTag({
         {label}
       </span>
 
-      {selected && (
+      {selectedState && (
         <CloseSm width={24} height={24} color={iconColor} />
       )}
     </div>

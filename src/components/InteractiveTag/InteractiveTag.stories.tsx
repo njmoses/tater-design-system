@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { InteractiveTag } from './InteractiveTag';
 
@@ -57,6 +58,35 @@ export const SelectedFocus: Story = {
 
 export const SelectedDisabled: Story = {
   args: { selected: true, state: 'disabled' },
+};
+
+// ── Interactive ─────────────────────────────────────────────────────────────
+
+export const Interactive: Story = {
+  render: () => {
+    const [log, setLog] = useState<string[]>([]);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <InteractiveTag
+          label="Tag"
+          state="default"
+          onSelect={(s) => setLog((prev) => [`onSelect(${s})`, ...prev].slice(0, 5))}
+        />
+        <div style={{ fontFamily: 'monospace', fontSize: 11, color: '#888' }}>
+          {log.map((entry, i) => <div key={i}>{entry}</div>)}
+        </div>
+      </div>
+    );
+  },
+};
+
+export const DisabledInteraction: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 16 }}>
+      <InteractiveTag label="Tag" selected={false} state="disabled" />
+      <InteractiveTag label="Tag" selected={true} state="disabled" />
+    </div>
+  ),
 };
 
 // ── All states grid ─────────────────────────────────────────────────────────

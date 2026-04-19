@@ -144,6 +144,38 @@ export const InlineDisabled: Story = {
   },
 };
 
+export const Interactive: Story = {
+  render: (args: LinkProps) => (
+    <Link
+      {...args}
+      leadingIcon={args.showLeadingIcon ? ExternalLink : undefined}
+      trailingIcon={args.showTrailingIcon ? ArrowRightMd : undefined}
+      onClick={() => alert('Link clicked')}
+    />
+  ),
+  args: {
+    status: 'default',
+    type: 'basic',
+    label: 'Hover or focus me',
+    showLeadingIcon: true,
+    showTrailingIcon: true,
+    theme: 'light',
+    href: undefined,
+  },
+};
+
+export const DisabledInteraction: Story = {
+  render,
+  args: {
+    status: 'disabled',
+    type: 'basic',
+    label: 'No interactions apply',
+    showLeadingIcon: true,
+    showTrailingIcon: true,
+    theme: 'light',
+  },
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
