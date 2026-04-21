@@ -1,3 +1,5 @@
+import { ExternalLink, ArrowRightMd } from 'react-coolicons';
+import { Link } from '@/components/Link/Link';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
@@ -44,7 +46,6 @@ function getStatusColors(
   return {
     title: t.text[tokenKey].default,
     bar: t.surface[tokenKey].default,
-    link: t.text[tokenKey].default,
     icon: t.icon[tokenKey].default,
   };
 }
@@ -60,40 +61,6 @@ function InfoIcon({ color }: { color: string }) {
     >
       <path
         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V11H13V17ZM13 9H11V7H13V9Z"
-        fill={color}
-      />
-    </svg>
-  );
-}
-
-function ExternalLinkIcon({ color }: { color: string }) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V12H19V19ZM14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3H14Z"
-        fill={color}
-      />
-    </svg>
-  );
-}
-
-function ArrowRightIcon({ color }: { color: string }) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z"
         fill={color}
       />
     </svg>
@@ -144,7 +111,7 @@ export function Snackbar({
         gap: t.layoutSpacing.sm,
         padding: t.layoutSpacing.sm,
         width: 512,
-        backgroundColor: t.default,
+        backgroundColor: t.base,
         borderRadius: t.borderRadius[300],
         overflow: "clip",
         fontFamily: typography.body.md.fontFamily,
@@ -236,33 +203,21 @@ export function Snackbar({
             )}
           </div>
 
-          {/* Link */}
+          {/* Link — alignSelf so the row does not stretch full width in the flex column */}
           {showLink && (
-            <button
-              onClick={onLinkClick}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: t.layoutSpacing.sm,
-                background: "none",
-                border: "none",
-                padding: 0,
-                cursor: status === "disabled" ? "not-allowed" : "pointer",
-              }}
-            >
-              <ExternalLinkIcon color={colors.link} />
-              <span
-                style={{
-                  ...typography.body.md,
-                  lineHeight: `${typography.body.md.lineHeight}px`,
-                  color: colors.link,
-                  textAlign: "center",
-                }}
-              >
-                {linkText}
-              </span>
-              <ArrowRightIcon color={colors.link} />
-            </button>
+            <div style={{ alignSelf: 'flex-start', maxWidth: '100%' }}>
+              <Link
+                type="basic"
+                status={status === "disabled" ? "disabled" : "default"}
+                label={linkText}
+                showLeadingIcon
+                leadingIcon={ExternalLink}
+                showTrailingIcon
+                trailingIcon={ArrowRightMd}
+                theme={theme}
+                onClick={onLinkClick}
+              />
+            </div>
           )}
         </div>
       </div>

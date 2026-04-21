@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTokens } from '@/tokens';
 import type { Theme } from '@/tokens';
 import { TreeItem } from './TreeItem';
 
@@ -52,7 +51,6 @@ function flatten(
 }
 
 export function Tree({ items, theme = 'light' }: TreeProps) {
-  const t = useTokens(theme);
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);

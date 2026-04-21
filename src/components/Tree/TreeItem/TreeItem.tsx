@@ -93,7 +93,7 @@ export function TreeItem({
       {level !== '03' && (
         <TreeIndicator
           status={status === 'focus' ? 'default' : status}
-          open={selected ? true : open}
+          open={open}
           theme={theme}
         />
       )}

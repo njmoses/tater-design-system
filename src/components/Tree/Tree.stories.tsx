@@ -56,8 +56,23 @@ const nestedItems: TreeItemConfig[] = [
     level: '01',
     showIcon: true,
     children: [
-      { id: '2-1', label: 'Screenshots', level: '02', showIcon: true },
-      { id: '2-2', label: 'Wallpapers', level: '02', showIcon: true },
+      {
+        id: '2-1',
+        label: 'Screenshots',
+        level: '02',
+        showIcon: true,
+        children: [
+          { id: '2-1-1', label: 'Desktop', level: '03', showIcon: true },
+          { id: '2-1-2', label: 'Mobile', level: '03', showIcon: true },
+        ],
+      },
+      {
+        id: '2-2',
+        label: 'Wallpapers',
+        level: '02',
+        showIcon: true,
+        children: [{ id: '2-2-1', label: 'HD', level: '03', showIcon: true }],
+      },
     ],
   },
   { id: '3', label: 'Videos', level: '01', showIcon: true },
