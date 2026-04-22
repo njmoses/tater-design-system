@@ -34,12 +34,13 @@ export function Carousel({ items, theme = 'light' }: CarouselProps) {
   const rightItem = items[activeIndex + 1] ?? null;
 
   return (
-    <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
       {/* Cards row */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
+          width: '100%',
           gap: `${t.layoutSpacing.md}px`,
         }}
       >
@@ -50,8 +51,8 @@ export function Carousel({ items, theme = 'light' }: CarouselProps) {
           theme={theme}
         />
 
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {/* Left card slot */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Left card slot — always reserves space using center card as invisible placeholder */}
           <div
             style={{
               transform: 'scale(0.85)',
@@ -61,7 +62,7 @@ export function Carousel({ items, theme = 'light' }: CarouselProps) {
               pointerEvents: leftItem ? 'auto' : 'none',
             }}
           >
-            {leftItem?.content}
+            {leftItem ? leftItem.content : centerItem?.content}
           </div>
 
           {/* Center card */}
@@ -75,7 +76,7 @@ export function Carousel({ items, theme = 'light' }: CarouselProps) {
             {centerItem?.content}
           </div>
 
-          {/* Right card slot */}
+          {/* Right card slot — always reserves space using center card as invisible placeholder */}
           <div
             style={{
               transform: 'scale(0.85)',
@@ -85,7 +86,7 @@ export function Carousel({ items, theme = 'light' }: CarouselProps) {
               pointerEvents: rightItem ? 'auto' : 'none',
             }}
           >
-            {rightItem?.content}
+            {rightItem ? rightItem.content : centerItem?.content}
           </div>
         </div>
 

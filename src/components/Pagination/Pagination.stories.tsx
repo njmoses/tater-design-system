@@ -1,92 +1,46 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PaginationItem } from './Pagination';
-import type { PaginationItemProps } from './Pagination';
+import { Pagination } from './Pagination';
 
-const meta: Meta<PaginationItemProps> = {
-  title: 'Components/Pagination/PaginationItem',
-  component: PaginationItem,
+const meta: Meta<typeof Pagination> = {
+  title: 'Components/Pagination/Pagination',
+  component: Pagination,
   argTypes: {
-    status: {
-      control: 'inline-radio',
-      options: ['default', 'hover', 'focus', 'disabled'],
-    },
-    type: {
-      control: 'inline-radio',
-      options: ['next', 'previous', 'overflow', 'numeric', 'selected'],
-    },
-    number: { control: { type: 'number', min: 1, max: 999 } },
-    theme: {
-      control: 'inline-radio',
-      options: ['light', 'dark'],
-    },
+    format: { control: 'inline-radio', options: ['default', 'jumper'] },
+    theme: { control: 'inline-radio', options: ['light', 'dark'] },
+    totalPages: { control: { type: 'number', min: 1 } },
+    defaultPage: { control: { type: 'number', min: 1 } },
   },
 };
 
 export default meta;
-type ItemStory = StoryObj<PaginationItemProps>;
+type Story = StoryObj<typeof Pagination>;
 
-export const Default: ItemStory = {
-  args: { status: 'default', type: 'selected', number: 1, theme: 'light' },
+export const DefaultFourPages: Story = {
+  args: { format: 'default', totalPages: 4, defaultPage: 1, theme: 'light' },
 };
 
-export const Hover: ItemStory = {
-  args: { status: 'hover', type: 'numeric', number: 1, theme: 'light' },
+export const DefaultTenPages: Story = {
+  args: { format: 'default', totalPages: 10, defaultPage: 1, theme: 'light' },
 };
 
-export const Focus: ItemStory = {
-  args: { status: 'focus', type: 'numeric', number: 1, theme: 'light' },
+export const JumperFormat: Story = {
+  args: { format: 'jumper', totalPages: 20, defaultPage: 1, theme: 'light' },
 };
 
-export const Disabled: ItemStory = {
-  args: { status: 'disabled', type: 'numeric', number: 1, theme: 'light' },
+export const FirstPageSelected: Story = {
+  args: { format: 'default', totalPages: 5, defaultPage: 1, theme: 'light' },
 };
 
-export const TypeNext: ItemStory = {
-  name: 'Type: Next',
-  args: { status: 'default', type: 'next', theme: 'light' },
+export const LastPageSelected: Story = {
+  args: { format: 'default', totalPages: 5, defaultPage: 5, theme: 'light' },
 };
 
-export const TypePrevious: ItemStory = {
-  name: 'Type: Previous',
-  args: { status: 'default', type: 'previous', theme: 'light' },
-};
-
-export const TypeOverflow: ItemStory = {
-  name: 'Type: Overflow',
-  args: { status: 'default', type: 'overflow', theme: 'light' },
-};
-
-export const TypeNumeric: ItemStory = {
-  name: 'Type: Numeric',
-  args: { status: 'default', type: 'numeric', number: 5, theme: 'light' },
-};
-
-export const TypeSelected: ItemStory = {
-  name: 'Type: Selected',
-  args: { status: 'default', type: 'selected', number: 3, theme: 'light' },
-};
-
-export const AllStatuses: ItemStory = {
-  name: 'All Statuses',
-  render: () => (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-      <PaginationItem status="default" type="numeric" number={1} />
-      <PaginationItem status="hover" type="numeric" number={1} />
-      <PaginationItem status="focus" type="numeric" number={1} />
-      <PaginationItem status="disabled" type="numeric" number={1} />
-    </div>
-  ),
-};
-
-export const AllTypes: ItemStory = {
-  name: 'All Types',
-  render: () => (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-      <PaginationItem type="previous" />
-      <PaginationItem type="numeric" number={1} />
-      <PaginationItem type="selected" number={2} />
-      <PaginationItem type="overflow" />
-      <PaginationItem type="next" />
-    </div>
-  ),
+export const Interactive: Story = {
+  args: {
+    format: 'default',
+    totalPages: 8,
+    defaultPage: 3,
+    theme: 'light',
+    onPageChange: (page: number) => console.log('Page changed to', page),
+  },
 };

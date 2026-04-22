@@ -1,207 +1,150 @@
+import { useState, useRef } from 'react';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
-import { ChevronLeft, ChevronRight } from 'react-coolicons';
+import { PaginationArrow } from './PaginationArrow';
+import { PaginationOverflow } from './PaginationOverflow';
+import { PaginationPage } from './PaginationPage';
 
-const ICON_SIZE = 24;
-
-export type PaginationItemStatus = 'default' | 'hover' | 'focus' | 'disabled';
-export type PaginationItemType = 'next' | 'previous' | 'overflow' | 'numeric' | 'selected';
-export type PaginationFormat = 'jumper' | 'default';
-
-export interface PaginationItemProps {
-  status?: PaginationItemStatus;
-  type?: PaginationItemType;
-  /** Number between 1–999, used for numeric and selected types */
-  number?: number;
-  theme?: Theme;
-}
+export type PaginationFormat = 'default' | 'jumper';
 
 export interface PaginationProps {
   format?: PaginationFormat;
+  totalPages: number;
+  defaultPage?: number;
+  onPageChange?: (page: number) => void;
   theme?: Theme;
 }
 
-function getItemStyles(
-  t: ReturnType<typeof useTokens>,
-  status: PaginationItemStatus,
-  type: PaginationItemType
-) {
-  if (status === 'disabled') {
-    return {
-      backgroundColor: t.surface.disabled.default,
-      iconColor: t.icon.disabled.default,
-      textColor: t.text.disabled.default,
-    };
+function buildPageWindows(totalPages: number, currentPage: number): (number | 'overflow')[] {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  if (type === 'selected') {
-    return {
-      backgroundColor: status === 'hover' ? t.surface.primary.defaultHover : t.surface.primary.default,
-      iconColor: t.icon.primary.onColor,
-      textColor: t.text.primary.onColor,
-    };
+  const pages: (number | 'overflow')[] = [1];
+
+  if (currentPage <= 3) {
+    pages.push(2, 3, 4, 'overflow', totalPages);
+  } else if (currentPage >= totalPages - 2) {
+    pages.push('overflow', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+  } else {
+    pages.push('overflow', currentPage - 1, currentPage, currentPage + 1, 'overflow', totalPages);
   }
 
-  if (status === 'hover') {
-    return {
-      backgroundColor: t.surface.primary.defaultSubtleHover,
-      iconColor: t.icon.primary.defaultHover,
-      textColor: t.text.primary.defaultHover,
-    };
-  }
-
-  // default or focus
-  return {
-    backgroundColor: t.base,
-    iconColor: t.icon.primary.default,
-    textColor: t.text.primary.default,
-  };
-}
-
-export function PaginationItem({
-  status = 'default',
-  type = 'numeric',
-  number = 1,
-  theme = 'light',
-}: PaginationItemProps) {
-  const t = useTokens(theme);
-  const styles = getItemStyles(t, status, type);
-  const typo = typography.body.mdSemibold;
-
-  return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 44,
-        height: 44,
-        borderRadius: `${t.borderRadius[200]}px`,
-        backgroundColor: styles.backgroundColor,
-        boxSizing: 'border-box',
-        flexShrink: 0,
-        cursor: status === 'disabled' ? 'not-allowed' : 'pointer',
-      }}
-    >
-      {status === 'focus' && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: -3,
-            border: `${t.borderWidth.xs}px solid ${t.border.primary.default}`,
-            borderRadius: `${t.borderRadius[300]}px`,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
-      {(type === 'numeric' || type === 'selected') && (
-        <span
-          style={{
-            fontFamily: typo.fontFamily,
-            fontSize: `${typo.fontSize}px`,
-            fontWeight: typo.fontWeight,
-            lineHeight: `${typo.lineHeight}px`,
-            letterSpacing: typo.letterSpacing,
-            color: styles.textColor,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {number}
-        </span>
-      )}
-
-      {type === 'previous' && (
-        <ChevronLeft width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
-      )}
-
-      {type === 'next' && (
-        <ChevronRight width={ICON_SIZE} height={ICON_SIZE} color={styles.iconColor} />
-      )}
-
-      {type === 'overflow' && (
-        <span
-          style={{
-            fontFamily: typo.fontFamily,
-            fontSize: `${typo.fontSize}px`,
-            fontWeight: typo.fontWeight,
-            lineHeight: `${typo.lineHeight}px`,
-            letterSpacing: typo.letterSpacing,
-            color: styles.textColor,
-          }}
-        >
-          •••
-        </span>
-      )}
-    </div>
-  );
+  return pages;
 }
 
 export function Pagination({
-  format = 'jumper',
+  format = 'default',
+  totalPages,
+  defaultPage = 1,
+  onPageChange,
   theme = 'light',
 }: PaginationProps) {
   const t = useTokens(theme);
   const typo = typography.body.md;
+  const [currentPage, setCurrentPage] = useState(defaultPage);
+  const [inputValue, setInputValue] = useState(String(defaultPage));
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const goToPage = (page: number) => {
+    const clamped = Math.max(1, Math.min(totalPages, page));
+    setCurrentPage(clamped);
+    setInputValue(String(clamped));
+    onPageChange?.(clamped);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) goToPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) goToPage(currentPage + 1);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const parsed = parseInt(inputValue, 10);
+      if (!isNaN(parsed)) {
+        goToPage(parsed);
+      } else {
+        setInputValue(String(currentPage));
+      }
+      inputRef.current?.blur();
+    }
+  };
+
+  const pages = buildPageWindows(totalPages, currentPage);
 
   return (
     <div
       style={{
         display: 'inline-flex',
         alignItems: 'center',
+        justifyContent: 'center',
         gap: `${t.layoutSpacing.xsm}px`,
       }}
     >
-      <PaginationItem type="previous" theme={theme} />
+      <PaginationArrow
+        type="previous"
+        status={currentPage === 1 ? 'disabled' : 'default'}
+        onClick={handlePrevious}
+        theme={theme}
+      />
 
-      {format === 'jumper' && (
-        <>
-          <PaginationItem type="numeric" number={1} theme={theme} />
-          <PaginationItem type="numeric" number={2} theme={theme} />
-          <PaginationItem type="numeric" number={3} theme={theme} />
-          <PaginationItem type="numeric" number={4} theme={theme} />
-        </>
+      {format === 'default' && pages.map((page, index) =>
+        page === 'overflow' ? (
+          <PaginationOverflow
+            key={`overflow-${index}`}
+            status="default"
+            theme={theme}
+          />
+        ) : (
+          <PaginationPage
+            key={page}
+            status="default"
+            selected={page === currentPage}
+            label={String(page)}
+            onClick={() => goToPage(page)}
+            theme={theme}
+          />
+        )
       )}
 
-      {format === 'default' && (
+      {format === 'jumper' && (
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: `${t.borderRadius[300]}px`,
+            gap: `${t.layoutSpacing.xsm}px`,
           }}
         >
-          <div
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleInputKeyDown}
             style={{
               width: 74,
               height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: `${t.borderRadius[300]}px`,
-              paddingRight: `${t.borderRadius[300]}px`,
-              paddingTop: `${t.layoutSpacing.xsm}px`,
-              paddingBottom: `${t.layoutSpacing.xsm}px`,
+              paddingLeft: `${t.layoutSpacing.xsm}px`,
+              paddingRight: `${t.layoutSpacing.xsm}px`,
+              paddingTop: `${t.layoutSpacing['2xsm']}px`,
+              paddingBottom: `${t.layoutSpacing['2xsm']}px`,
               backgroundColor: t.base,
               border: `${t.borderWidth.xs}px solid ${t.border.default.default}`,
               borderRadius: `${t.borderRadius[200]}px`,
               boxSizing: 'border-box',
+              fontFamily: typo.fontFamily,
+              fontSize: `${typo.fontSize}px`,
+              fontWeight: typo.fontWeight,
+              lineHeight: `${typo.lineHeight}px`,
+              letterSpacing: typo.letterSpacing,
+              color: t.text.default.body,
+              outline: 'none',
+              textAlign: 'center',
             }}
-          >
-            <span
-              style={{
-                flex: '1 0 0',
-                fontFamily: typo.fontFamily,
-                fontSize: `${typo.fontSize}px`,
-                fontWeight: typo.fontWeight,
-                lineHeight: `${typo.lineHeight}px`,
-                letterSpacing: typo.letterSpacing,
-                color: t.text.disabled.default,
-              }}
-            >
-              2
-            </span>
-          </div>
+          />
           <span
             style={{
               fontFamily: typo.fontFamily,
@@ -209,16 +152,21 @@ export function Pagination({
               fontWeight: typo.fontWeight,
               lineHeight: `${typo.lineHeight}px`,
               letterSpacing: typo.letterSpacing,
-              color: t.text.default.body,
+              color: t.text.default.caption,
               whiteSpace: 'nowrap',
             }}
           >
-            of 10 pages
+            of {totalPages} pages
           </span>
         </div>
       )}
 
-      <PaginationItem type="next" theme={theme} />
+      <PaginationArrow
+        type="next"
+        status={currentPage === totalPages ? 'disabled' : 'default'}
+        onClick={handleNext}
+        theme={theme}
+      />
     </div>
   );
 }
