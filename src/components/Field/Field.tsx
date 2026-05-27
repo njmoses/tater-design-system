@@ -44,6 +44,10 @@ export interface FieldProps {
   onFocus?: () => void;
   /** Callback when field loses focus */
   onBlur?: () => void;
+  /** HTML input type (e.g. password, email) */
+  inputType?: React.HTMLInputTypeAttribute;
+  /** When true, the field stretches to the width of its container */
+  fullWidth?: boolean;
 }
 
 const ICON_SIZE = 24;
@@ -119,6 +123,8 @@ export function Field({
   onChange,
   onFocus,
   onBlur,
+  inputType = 'text',
+  fullWidth = false,
 }: FieldProps) {
   const t = useTokens(theme);
   const [interactionStatus, setInteractionStatus] = useState<FieldStatus>(status);
@@ -169,12 +175,12 @@ export function Field({
         display: 'flex',
         alignItems: 'center',
         gap: t.layoutSpacing.xsm,
-        height: 40,
-        paddingLeft: t.layoutSpacing.xsm,
-        paddingRight: t.layoutSpacing.xsm,
+        height: t.layoutSpacing['2xlg'],
+        paddingLeft: t.borderRadius[300],
+        paddingRight: t.borderRadius[300],
         paddingTop: t.borderWidth.lg,
         paddingBottom: t.borderWidth.lg,
-        width: 250,
+        width: fullWidth ? '100%' : 250,
         backgroundColor: styles.backgroundColor,
         border: `${t.borderWidth.xs}px solid ${styles.borderColor}`,
         borderRadius: t.borderRadius[200],
@@ -208,6 +214,7 @@ export function Field({
       })()}
 
       <input
+        type={inputType}
         className={placeholderClass}
         placeholder={placeholder}
         disabled={isDisabled}
