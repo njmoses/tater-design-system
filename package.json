@@ -5,7 +5,12 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/index.ts"
+      "import": "./src/entry/public.ts",
+      "types": "./src/entry/public.ts"
+    },
+    "./full": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
     }
   },
   "scripts": {

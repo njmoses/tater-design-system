@@ -19,6 +19,8 @@ export interface InputProps
   labelStatus?: LabelProps['status'];
   /** Optional hint text rendered between the Label and Field */
   hint?: string;
+  /** When true, only the field is rendered (placeholder-only layouts) */
+  hideLabel?: boolean;
   theme?: Theme;
 }
 
@@ -42,6 +44,9 @@ export function Input({
   onChange,
   onFocus,
   onBlur,
+  inputType,
+  fullWidth,
+  hideLabel = false,
   // Shared
   theme = 'light',
 }: InputProps) {
@@ -54,18 +59,20 @@ export function Input({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: `${t.layoutSpacing.xsm}px`,
-        width: 250,
+        gap: hideLabel ? 0 : `${t.layoutSpacing.xsm}px`,
+        width: fullWidth ? '100%' : 250,
       }}
     >
-      <Label
-        text={label}
-        status={labelStatus}
-        showInfoTip={showInfoTip}
-        htmlFor={htmlFor}
-        disabled={isDisabled}
-        theme={theme}
-      />
+      {!hideLabel && (
+        <Label
+          text={label}
+          status={labelStatus}
+          showInfoTip={showInfoTip}
+          htmlFor={htmlFor}
+          disabled={isDisabled}
+          theme={theme}
+        />
+      )}
 
       {hint && (
         <span
@@ -94,6 +101,8 @@ export function Input({
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
+        inputType={inputType}
+        fullWidth={fullWidth}
         theme={theme}
       />
     </div>

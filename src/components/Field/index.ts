@@ -1,1 +1,6 @@
-export { Field, type FieldProps, type FieldStatus } from './Field';
+export {
+  Field,
+  type FieldProps,
+  type FieldStatus,
+  type IconComponent,
+} from './Field';
