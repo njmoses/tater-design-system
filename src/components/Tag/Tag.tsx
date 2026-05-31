@@ -26,10 +26,10 @@ function useVariantTokens(
   switch (variant) {
     case 'neutral':
       return {
-        backgroundColor: t.default,
-        borderColor: t.border.default.default,
-        textColor: t.text.default.body,
-        iconColor: t.icon.default.regular,
+        backgroundColor: t.surface.primary.defaultSubtle,
+        borderColor: t.border.primary.default,
+        textColor: t.text.primary.default,
+        iconColor: t.icon.primary.default,
       };
     case 'information':
       return {
