@@ -165,7 +165,7 @@ export function AreaField({
       style={{
         position: 'relative',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         gap: t.layoutSpacing.xsm,
         height: t.layoutSpacing.xlg * 2,
         paddingLeft: t.borderRadius[300],
@@ -212,10 +212,10 @@ export function AreaField({
         onBlur={handleBlur}
         {...textareaValueProps}
         style={{
-          flex: '1 0 0',
+          flex: '1 1 auto',
+          alignSelf: 'stretch',
           minWidth: 0,
           width: '100%',
-          height: '100%',
           resize: 'none',
           fontFamily: typo.fontFamily,
           fontSize: typo.fontSize,
