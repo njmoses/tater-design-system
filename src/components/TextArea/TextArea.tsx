@@ -1,18 +1,13 @@
 import { Label } from '@/components/Label';
 import type { LabelProps } from '@/components/Label';
-import { Field } from '@/components/Field';
-import type { FieldProps } from '@/components/Field';
+import { AreaField } from '@/components/AreaField';
+import type { AreaFieldProps } from '@/components/AreaField';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 
-// LabelProps.text (label copy) and FieldProps.text (input value) conflict, so we
-// lift Label's text to `label` and keep Field's text as `text`.
-// LabelProps.status (required/optional marker) and FieldProps.status (visual state)
-// are unrelated, so LabelProps.status becomes `labelStatus`.
-// LabelProps.disabled is derived from status === 'disabled' automatically.
-export interface InputProps
+export interface TextAreaProps
   extends Omit<LabelProps, 'theme' | 'text' | 'status' | 'disabled'>,
-          Omit<FieldProps, 'theme'> {
+          Omit<AreaFieldProps, 'theme'> {
   /** Text rendered by the Label sub-component */
   label: string;
   /** Controls the required/optional annotation on the Label */
@@ -26,7 +21,7 @@ export interface InputProps
   theme?: Theme;
 }
 
-export function Input({
+export function TextArea({
   // Label props
   label,
   labelStatus,
@@ -35,7 +30,7 @@ export function Input({
   // Hint
   hintText,
   showHintText = true,
-  // Field props
+  // AreaField props
   text,
   placeholder,
   status = 'default',
@@ -47,12 +42,11 @@ export function Input({
   onChange,
   onFocus,
   onBlur,
-  inputType,
   fullWidth,
   hideLabel = false,
   // Shared
   theme = 'light',
-}: InputProps) {
+}: TextAreaProps) {
   const t = useTokens(theme);
   const typo = typography.body.sm;
   const isDisabled = status === 'disabled';
@@ -92,7 +86,7 @@ export function Input({
         </span>
       )}
 
-      <Field
+      <AreaField
         text={text}
         placeholder={placeholder}
         status={status}
@@ -104,7 +98,6 @@ export function Input({
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        inputType={inputType}
         fullWidth={fullWidth}
         theme={theme}
       />

@@ -1,6 +1,7 @@
 // @ts-nocheck — barrel re-exports duplicate IconComponent across modules; use entry/public.ts in apps.
 // Components
 export * from './components/Accordion'
+export * from './components/AreaField'
 export * from './components/Avatar'
 export * from './components/Badge'
 export * from './components/Breadcrumb'
@@ -25,6 +26,7 @@ export * from './components/RadioButton'
 export * from './components/Snackbar'
 export * from './components/Tab'
 export * from './components/Tag'
+export * from './components/TextArea'
 export * from './components/Toggle'
 export * from './components/Tree'
 export * from './components/VerticalNav'

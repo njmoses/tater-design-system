@@ -1,32 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Info, Show } from 'react-coolicons';
-import { Input } from './Input';
-import type { InputProps } from './Input';
+import { AreaField } from './AreaField';
+import type { AreaFieldProps } from './AreaField';
 
-type StoryArgs = InputProps & {
+type StoryArgs = AreaFieldProps & {
   showLeadingIcon?: boolean;
   showTrailingIcon?: boolean;
 };
 
 const meta: Meta<StoryArgs> = {
-  title: 'Components/Input',
-  component: Input,
+  title: 'Components/AreaField',
+  component: AreaField,
   argTypes: {
     status: {
       control: 'inline-radio',
-      options: ['default', 'hover', 'focus', 'error', 'success', 'disabled'],
-    },
-    labelStatus: {
-      control: 'inline-radio',
-      options: ['default', 'required', 'optional'],
+      options: ['default', 'hover', 'active', 'error', 'success', 'disabled'],
     },
     filled: {
-      control: 'boolean',
-    },
-    showInfoTip: {
-      control: 'boolean',
-    },
-    showHintText: {
       control: 'boolean',
     },
     showLeadingIcon: {
@@ -51,11 +41,11 @@ const meta: Meta<StoryArgs> = {
 export default meta;
 type Story = StoryObj<StoryArgs>;
 
-const renderInput = (args: StoryArgs) => {
-  const { showLeadingIcon, showTrailingIcon, ...inputProps } = args;
+const renderAreaField = (args: StoryArgs) => {
+  const { showLeadingIcon, showTrailingIcon, ...areaFieldProps } = args;
   return (
-    <Input
-      {...inputProps}
+    <AreaField
+      {...areaFieldProps}
       leadingIcon={showLeadingIcon ? Show : undefined}
       trailingIcon={showTrailingIcon ? Info : undefined}
     />
@@ -63,11 +53,9 @@ const renderInput = (args: StoryArgs) => {
 };
 
 export const Default: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
     status: 'default',
     filled: false,
@@ -78,11 +66,9 @@ export const Default: Story = {
 };
 
 export const Hover: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
     status: 'hover',
     filled: false,
@@ -92,14 +78,12 @@ export const Hover: Story = {
   },
 };
 
-export const Focus: Story = {
-  render: renderInput,
+export const Active: Story = {
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
-    status: 'focus',
+    status: 'active',
     filled: false,
     showLeadingIcon: true,
     showTrailingIcon: true,
@@ -108,11 +92,9 @@ export const Focus: Story = {
 };
 
 export const Error: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
     status: 'error',
     filled: false,
@@ -123,11 +105,9 @@ export const Error: Story = {
 };
 
 export const Success: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
     status: 'success',
     filled: false,
@@ -138,11 +118,9 @@ export const Success: Story = {
 };
 
 export const Disabled: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
+    text: '',
     placeholder: 'Placeholder',
     status: 'disabled',
     filled: false,
@@ -153,11 +131,8 @@ export const Disabled: Story = {
 };
 
 export const FilledTrue: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
     text: 'Entered value',
     placeholder: 'Placeholder',
     status: 'default',
@@ -169,11 +144,8 @@ export const FilledTrue: Story = {
 };
 
 export const FilledFalse: Story = {
-  render: renderInput,
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
     text: '',
     placeholder: 'Placeholder',
     status: 'default',
@@ -184,40 +156,24 @@ export const FilledFalse: Story = {
   },
 };
 
-export const Interactive: Story = {
-  render: renderInput,
+export const WithIcons: Story = {
+  render: renderAreaField,
   args: {
-    label: 'Label',
-    hintText: 'Hint Text',
-    showHintText: true,
-    placeholder: 'Type something...',
+    text: 'Text area with icons',
+    placeholder: 'Placeholder',
     status: 'default',
+    filled: true,
+    showLeadingIcon: true,
+    showTrailingIcon: true,
     theme: 'light',
   },
 };
 
-export const AllStatusVariants: Story = {
-  render: (args) => {
-    const statuses = ['default', 'error', 'success', 'disabled'] as const;
-    return (
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-start' }}>
-        {statuses.map((s) => (
-          <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 12, color: '#666', textTransform: 'capitalize' }}>{s}</span>
-            <Input
-              label="Label"
-              hintText="Hint Text"
-              showHintText
-              placeholder="Type something..."
-              status={s}
-              theme={args.theme}
-            />
-          </div>
-        ))}
-      </div>
-    );
-  },
+export const Interactive: Story = {
+  render: renderAreaField,
   args: {
+    placeholder: 'Type something...',
+    status: 'default',
     theme: 'light',
   },
 };
