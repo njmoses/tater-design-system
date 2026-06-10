@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
-import { CloseSm } from 'react-coolicons';
+import { CloseMd } from 'react-coolicons';
 import { useTokens, typography } from '@/tokens';
 import type { Theme } from '@/tokens';
 import { Button } from '@/components/Button';
@@ -23,7 +23,7 @@ export interface ModalProps {
   theme?: Theme;
 }
 
-const CLOSE_ICON_SIZE = 16;
+const CLOSE_ICON_SIZE = 24;
 
 export function Modal({
   title,
@@ -182,7 +182,7 @@ export function Modal({
                 outline: 'none',
               }}
             >
-              <CloseSm
+              <CloseMd
                 width={CLOSE_ICON_SIZE}
                 height={CLOSE_ICON_SIZE}
                 color={t.icon.default.regular}
