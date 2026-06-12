@@ -184,7 +184,7 @@ export function Button({
           fontFamily: typo.fontFamily,
           fontSize: typo.fontSize,
           fontWeight: typo.fontWeight,
-          lineHeight: typo.lineHeight,
+          lineHeight: `${typo.lineHeight}px`,
           letterSpacing: typo.letterSpacing,
           color: styles.textColor,
           whiteSpace: 'nowrap',
